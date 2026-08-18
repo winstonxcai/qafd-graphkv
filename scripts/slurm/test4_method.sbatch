@@ -18,6 +18,7 @@ QAFD_PY=/mnt/beegfs/home/Winston/miniconda3/envs/qafd-rag/bin/python
 OUT_ROOT=${OUT_ROOT:-$ROOT/artifacts/results/test4_250_k15_parallel}
 LIMIT=${LIMIT:-250}
 K=${K:-15}
+PROMPT_STYLE=${PROMPT_STYLE:-default}
 OUT_DIR=$OUT_ROOT/$METHOD
 
 mkdir -p "$OUT_DIR"
@@ -57,6 +58,10 @@ if [[ "$READY" -ne 1 ]]; then
 fi
 
 cd "$ROOT"
+EXTRA_ARGS=(--prompt-style "$PROMPT_STYLE")
+if [[ -n "${STRATEGY_NAME:-}" ]]; then
+  EXTRA_ARGS+=(--strategy-name "$STRATEGY_NAME")
+fi
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.test4_benchmark \
   --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
   --questions third_party/QAFD-RAG/data/multihop/hotpotqa.json \
@@ -66,4 +71,5 @@ PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.test4_benchmark \
   --recursive-port "$PORT" \
   --k "$K" \
   --limit "$LIMIT" \
-  --method "$METHOD"
+  --method "$METHOD" \
+  "${EXTRA_ARGS[@]}"

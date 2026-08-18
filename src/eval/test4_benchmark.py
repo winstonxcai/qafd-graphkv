@@ -45,6 +45,27 @@ def parse_passage(text: str) -> tuple[str, str]:
     return title, body or title
 
 
+def build_suffix(question: str, style: str) -> str:
+    if style == "concise":
+        instruction = (
+            "Answer using only the provided search documents. Resolve any "
+            "intermediate entity needed by the question, then return only the "
+            "shortest answer phrase with no explanation."
+        )
+    elif style == "multihop":
+        instruction = (
+            "Answer using only the provided search documents. Follow the "
+            "question's entity links step by step, verify each hop against the "
+            "documents, and give a concise final answer with no unrelated facts."
+        )
+    else:
+        instruction = (
+            "Please write a high-quality answer for the given question using "
+            "only the provided search documents (some of which might be irrelevant)."
+        )
+    return f"{instruction} \n Question: {question} \n<|assistant|>\n"
+
+
 class PassageGraph:
     def __init__(self, graph: ig.Graph, max_hops: int):
         self.graph = graph
@@ -127,9 +148,17 @@ def main() -> None:
     parser.add_argument("--recursive-port", type=int, default=8772)
     parser.add_argument("--include-recursive", action="store_true")
     parser.add_argument("--method", choices=["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2", "qafd_recursive_h1_t2"])
+    parser.add_argument("--strategy-name")
+    parser.add_argument(
+        "--prompt-style",
+        choices=["default", "concise", "multihop"],
+        default="default",
+    )
     parser.add_argument("--k", type=int, default=15)
     parser.add_argument("--limit", type=int, default=50)
     args = parser.parse_args()
+    if args.strategy_name and not args.method:
+        parser.error("--strategy-name requires a single --method")
 
     results = json.loads(Path(args.results).read_text())["per_query"][: args.limit]
     questions = json.loads(Path(args.questions).read_text())
@@ -148,7 +177,14 @@ def main() -> None:
         methods.append("qafd_recursive_h1_t2")
     if args.method:
         methods = [args.method]
-    handles = {method: (output_dir / f"{method}.jsonl").open("w") for method in methods}
+    labels = {
+        method: args.strategy_name if args.strategy_name and method == args.method else method
+        for method in methods
+    }
+    handles = {
+        method: (output_dir / f"{labels[method]}.jsonl").open("w")
+        for method in methods
+    }
     graph_cache = {h: PassageGraph(graph, h) for h in (0, 1, 2)}
     totals = {method: {"em": 0.0, "f1": 0.0, "seconds": 0.0} for method in methods}
 
@@ -166,7 +202,7 @@ def main() -> None:
                 raise ValueError(f"qid={qid} has passages missing from graph")
 
             question = item["question"]
-            suffix = f"Please write a high-quality answer for the given question using only the provided search documents (some of which might be irrelevant). \n Question: {question} \n<|assistant|>\n"
+            suffix = build_suffix(question, args.prompt_style)
             base_docs = sorted(documents, key=lambda doc: doc["score"])
             orders = {
                 "sequential": documents,
@@ -222,7 +258,7 @@ def main() -> None:
 
     summary = []
     for method, values in totals.items():
-        summary.append({"method": method, "questions": args.limit, "em": values["em"] / args.limit, "f1": values["f1"] / args.limit, "avg_seconds": values["seconds"] / args.limit, "total_seconds": values["seconds"]})
+        summary.append({"method": labels[method], "questions": args.limit, "em": values["em"] / args.limit, "f1": values["f1"] / args.limit, "avg_seconds": values["seconds"] / args.limit, "total_seconds": values["seconds"]})
     (output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
     print(json.dumps(summary, indent=2))
 
