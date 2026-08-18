@@ -236,6 +236,29 @@ At this stage I do **not care about statistical significance**. The goal is:
 
 > Can I reproduce the repo and correctly manipulate its caches on my A800?
 
+## Test 0 results
+
+Completed on one NVIDIA A800 with 10 HotpotQA examples using the completed
+`ldsjmdy/Tulu3-Block-FT` model:
+
+| Mode | Examples | Wall time | TTFT | Peak GPU memory |
+|---|---:|---:|---:|---:|
+| `vanilla` | 10 | 26.13 s | Not captured | Not captured |
+| `gapemp` (Graph-KV) | 10 | 34.27 s | Not captured | Not captured |
+
+All 20 requests returned HTTP 200. The generated results were saved remotely
+to:
+
+```text
+/mnt/beegfs/home/Winston/test0_18659/results/hqa/ldsjmdyTulu3-Block-FT/vanilla_ascent.jsonl
+/mnt/beegfs/home/Winston/test0_18659/results/hqa/ldsjmdyTulu3-Block-FT/gapemp_ascent.jsonl
+```
+
+TTFT was not captured because the official GraphKV inference client reports
+only the completed response, not time-to-first-token. Peak GPU memory was not
+captured because no concurrent `nvidia-smi` sampler was running during the
+test. These measurements should be added in a follow-up benchmark run.
+
 ---
 
 # 5. Test 1 — synthetic recursive-prefill test
