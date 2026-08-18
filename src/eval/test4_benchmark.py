@@ -52,15 +52,15 @@ class PassageGraph:
         self.graph = graph
         self.max_hops = max_hops
         self.entity_neighbors = {
-            v.index: [n for n in graph.neighbors(v.index) if graph.vs[n]["kind"] == "entity"]
+            v.index: [n for n in graph.neighbors(v.index) if graph.vs[n]["name"].startswith("entity-")]
             for v in graph.vs
-            if graph.vs[v.index]["kind"] == "entity"
+            if graph.vs[v.index]["name"].startswith("entity-")
         }
 
     def _bounded(self, source: int, target: int) -> bool:
-        start = [n for n in self.graph.neighbors(source) if self.graph.vs[n]["kind"] == "entity"]
+        start = [n for n in self.graph.neighbors(source) if self.graph.vs[n]["name"].startswith("entity-")]
         target_entities = set(
-            n for n in self.graph.neighbors(target) if self.graph.vs[n]["kind"] == "entity"
+            n for n in self.graph.neighbors(target) if self.graph.vs[n]["name"].startswith("entity-")
         )
         if set(start) & target_entities:
             return True
@@ -130,7 +130,11 @@ def main() -> None:
     questions = json.loads(Path(args.questions).read_text())
     answers = {q["question"]: [q["answer"]] for q in questions}
     graph = ig.Graph.Read_Pickle(args.graph)
-    content_to_vertex = {v["content"]: v.index for v in graph.vs if v["kind"] == "chunk"}
+    content_to_vertex = {
+        v["content"]: v.index
+        for v in graph.vs
+        if v["name"].startswith("chunk-") and v["content"]
+    }
     prefix = "<|user|>\nYou are an intelligent AI assistant. Please answer questions based on the user instructions. Below are some reference documents that may help you in answering the user's question.\n\n"
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
