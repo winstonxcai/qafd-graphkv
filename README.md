@@ -587,6 +587,12 @@ Your interface is simply:
 
 That's valuable given your unstable A800 access.
 
+The serializer is implemented in
+`src/qafd_bridge/serialize.py`. It has no QAFD or GraphKV imports and validates
+passage IDs, finite QAFD scores, edge endpoints, entity-hop path lengths, and
+diameters before writing JSONL. `tests/test_qafd_serialize.py` covers a valid
+round trip and invalid-edge rejection.
+
 ---
 
 # 9. Test 3 — determine whether the QAFD passage graph is even useful
