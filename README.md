@@ -439,6 +439,13 @@ for t in range(T):
     kv = next_kv
 ```
 
+### Implementation note
+
+This propagation logic is implemented in
+`src/recursive_kv/propagate.py`. It reuses GraphKV's cache concatenation,
+RoPE re-rotation, and cache-cutting utilities rather than replacing the
+upstream cache machinery. Test 1 uses this module directly.
+
 The difficult part is **RoPE/cache positioning**, not the recursion loop. Reuse Graph-KV's implementation rather than reconstructing it.
 
 Also inspect `gapemp_graph` in `pcw_parallel.py`: the repository already has a graph-specific mode taking a center node and neighbor nodes for its Arxiv graph experiment. That's likely the closest starting point for arbitrary QAFD adjacency. ([[GitHub](https://github.com/Graph-COM/GraphKV/blob/main/pcw_parallel.py)][5])
