@@ -33,35 +33,56 @@ class PassageTopology:
         return asdict(self)
 
 
-def _kind(graph, vertex: int) -> str:
-    name = str(graph.vs[vertex]["name"])
-    return name.split("-", 1)[0]
+class _EntityIndex:
+    def __init__(self, graph):
+        self.graph = graph
+        self.names = [str(vertex["name"]) for vertex in graph.vs]
+        self.kinds = [name.split("-", 1)[0] for name in self.names]
+        self.cache = {}
+
+    def entity_neighbors(self, vertex: int):
+        if vertex not in self.cache:
+            self.cache[vertex] = tuple(
+                neighbor
+                for neighbor in self.graph.neighbors(vertex)
+                if self.kinds[neighbor] == "entity"
+            )
+        return self.cache[vertex]
 
 
-def _entity_path(graph, source: int, target: int, max_hops: int):
+def _entity_path(index: _EntityIndex, source: int, target: int, max_hops: int):
     """Find a shortest bounded path represented by entity node names.
 
     A path ``passage-entity-passage`` has entity-hop length 0. Each additional
     entity-to-entity transition increases the entity-hop length by one.
     """
-    queue = deque([(source, (), -1)])
-    seen = {(source, -1)}
+    source_entities = index.entity_neighbors(source)
+    target_entities = set(index.entity_neighbors(target))
+    if not source_entities or not target_entities:
+        return None
+    queue = deque()
+    distance = {}
+    parent = {}
+    for entity in source_entities:
+        queue.append(entity)
+        distance[entity] = 0
+        parent[entity] = None
     while queue:
-        node, path, entity_hops = queue.popleft()
-        for neighbor in graph.neighbors(node):
-            kind = _kind(graph, neighbor)
-            if neighbor == target and path:
-                return path
-            if kind != "entity":
-                continue
-            next_hops = entity_hops + 1
-            if next_hops > max_hops:
-                continue
-            state = (neighbor, next_hops)
-            if state in seen:
-                continue
-            seen.add(state)
-            queue.append((neighbor, path + (str(graph.vs[neighbor]["name"]),), next_hops))
+        node = queue.popleft()
+        if node in target_entities:
+            path = []
+            current = node
+            while current is not None:
+                path.append(index.names[current])
+                current = parent[current]
+            return tuple(reversed(path))
+        if distance[node] >= max_hops:
+            continue
+        for neighbor in index.entity_neighbors(node):
+            if neighbor not in distance:
+                distance[neighbor] = distance[node] + 1
+                parent[neighbor] = node
+                queue.append(neighbor)
     return None
 
 
@@ -95,11 +116,12 @@ def analyze_passages(
     max_hops: int = 4,
     selected_count: int | None = None,
 ) -> PassageTopology:
+    index = _EntityIndex(graph)
     edges: list[tuple[int, int]] = []
     hop_histogram: Counter[int] = Counter()
     selected_entities: set[str] = set()
     for left, right in combinations(range(len(passage_vertices)), 2):
-        path = _entity_path(graph, passage_vertices[left], passage_vertices[right], max_hops)
+        path = _entity_path(index, passage_vertices[left], passage_vertices[right], max_hops)
         if path is None:
             continue
         edges.append((left, right))
