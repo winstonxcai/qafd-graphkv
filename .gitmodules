@@ -1,0 +1,6 @@
+[submodule "third_party/QAFD-RAG"]
+	path = third_party/QAFD-RAG
+	url = https://github.com/Tarzanagh/QAFD-RAG
+[submodule "third_party/GraphKV"]
+	path = third_party/GraphKV
+	url = https://github.com/Graph-COM/GraphKV
