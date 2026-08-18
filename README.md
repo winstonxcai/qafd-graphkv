@@ -686,11 +686,115 @@ i.e. **sparse, meaningful connectivity with nontrivial diameter**.
 
 I would inspect this on **100–500 queries before spending much GPU time**.
 
+## Test 3 results: bounded search with h <= 2
+
+The first topology pass used 20 HotpotQA questions and the preserved QAFD
+top-20 output. For each selected passage pair, BFS was allowed to traverse at
+most two entity-to-entity links:
+
+```bash
+python -m src.qafd_bridge.analyze_topology \
+  --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
+  --graph third_party/QAFD-RAG/kg/multihop/gpt-4o-mini_nvidia-nv-embed-v2_hotpotqa/graph.pickle \
+  --output-dir artifacts/results/test3_topology_h2 \
+  --max-hops 2
+```
+
+The aggregate results were:
+
+| k | Avg passage-passage edges | Avg components | Avg diameter | Fully connected questions |
+|---:|---:|---:|---:|---:|
+| 5 | 9.35 | 1.10 | 1.20 | 95% |
+| 8 | 25.60 | 1.05 | 1.60 | 95% |
+| 10 | 40.35 | 1.10 | 1.70 | 90% |
+| 15 | 91.70 | 1.00 | 2.25 | 100% |
+| 20 | 161.65 | 1.00 | 2.30 | 100% |
+
+Here, **components** means connected components in the projected graph whose
+nodes are the selected passages. An edge exists when the corresponding two
+passages can be connected through the QAFD entity graph within the `h <= 2`
+bound. Thus, for one question with five passages:
+
+```text
+P1 -- P2       P3 -- P4       P5
+```
+
+there are three connected components. `avg components` is the mean of that
+per-question count over all 20 questions; it is not the number of components
+in the full 106k-node QAFD graph. A fully connected question has exactly one
+component, `largest_component == k`, and zero unreachable passage pairs.
+
+For example, question `qid=1` at `k=5` was fully connected:
+
+```text
+Question: The fictional private detective that appears in
+"The Adventure of the Seven Clocks" what written by whom?
+
+selected passages:       5
+passage-passage edges:  10 / 10 possible
+components:              1
+largest component:       5
+average degree:           4.0
+diameter:                 1
+unreachable pairs:       0
+entity-hop histogram:    h=0: 6, h=1: 1, h=2: 3
+```
+
+This is a complete five-node passage graph: every selected passage reaches
+every other selected passage under the bounded search. The `h` histogram counts
+the entity-to-entity hops used by each discovered edge; `h=0` is the direct
+passage-entity-passage case.
+
+The detailed outputs are stored in
+`artifacts/results/test3_topology_h2/summary.csv`,
+`artifacts/results/test3_topology_h2/hop_histogram.csv`, and
+`artifacts/results/test3_topology_h2/per_question.jsonl`.
+
+## Test 3 comparison across entity-hop bounds
+
+We repeated the topology analysis on 250 HotpotQA questions for three edge
+definitions:
+
+```text
+h <= 0   direct passage-entity-passage connections only
+h <= 1   direct connections plus one entity-to-entity hop
+h <= 2   direct connections plus up to two entity-to-entity hops
+```
+
+The complete outputs are kept separately:
+
+```text
+artifacts/results/test3_topology_h0_250/
+artifacts/results/test3_topology_h1_250/
+artifacts/results/test3_topology_h2_250/
+```
+
+At `k=15`, the comparison is:
+
+| Entity-hop bound | Avg edge density | Avg components | Avg diameter | Fully connected questions |
+|---|---:|---:|---:|---:|
+| `h <= 0` | 0.245 | 5.50 | 3.11 | 6.4% |
+| `h <= 1` | 0.522 | 1.78 | 2.96 | 58.0% |
+| `h <= 2` | 0.851 | 1.07 | 1.98 | 94.0% |
+
+The same pattern holds across the tested values of `k`: `h <= 0` is sparse
+but frequently disconnected, while `h <= 2` is highly connected and close to
+a clique. `h <= 1` is the best compromise between reachability and structure.
+For example, at `k=10`, `h <= 1` gives 0.617 average edge density, 1.56
+average components, 2.41 average diameter, and 65.2% fully connected
+questions.
+
+Therefore, Test 4 should use `h <= 1` as the primary QAFD-GraphKV topology.
+The `h <= 0` and `h <= 2` variants should remain as ablations to measure the
+effect of under-connecting and over-connecting the passage graph. This is a
+topology-based selection; downstream EM/F1 and latency determine whether the
+intermediate structure actually improves generation.
+
 ---
 
 # 10. Test 4 — first actual research experiment
 
-Once the graph statistics look sensible, use exactly the **same QAFD top-5 passages** for every method.
+Once the graph statistics look sensible, use exactly the **same QAFD top-k passages** for every method.
 
 Run:
 
@@ -745,6 +849,39 @@ plus:
 ]
 
 QAFD's official HotpotQA benchmark itself reports EM/F1, so those are the natural outcome metrics. ([[GitHub](https://github.com/Tarzanagh/QAFD-RAG)][3])
+
+## Initial Test 4 result: 50 questions, k=15
+
+The first controlled run used the same QAFD top-15 passages for every method
+on 50 HotpotQA questions. The QAFD variants changed only the passage ordering
+provided to GraphKV's official `gapemp` endpoint; they did not modify GraphKV's
+cache machinery or claim recursive propagation. `h <= 1` was the primary
+topology and `h <= 0`/`h <= 2` were ablations.
+
+| Method | EM | F1 | Avg request latency |
+|---|---:|---:|---:|
+| Sequential | 0.640 | 0.119 | 1.885 s |
+| Original Graph-KV | 0.640 | 0.110 | 2.657 s |
+| QAFD ordering, `h <= 0` | 0.600 | 0.114 | 2.468 s |
+| QAFD ordering, `h <= 1` | **0.680** | 0.118 | 2.389 s |
+| QAFD ordering, `h <= 2` | 0.600 | 0.107 | 2.604 s |
+
+The `h <= 1` ordering is the strongest initial result by exact match: 34/50
+questions were scored as correct, compared with 32/50 for sequential and
+original Graph-KV. Its F1 is essentially tied with sequential, while the
+`h <= 2` over-connected topology underperforms. This is encouraging but only a
+small first signal; the benchmark should be expanded to 200--500 questions
+before drawing a conclusion.
+
+The raw per-method JSONL files and summary are stored on the GPU server at:
+
+```text
+/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_50_k15/
+```
+
+The full recursive QAFD-GraphKV comparison, including `T=2` propagation and
+adaptive `T=min(D,3)`, remains a follow-up experiment. This run therefore
+validates graph-informed ordering, not the complete recursive method.
 
 ---
 
