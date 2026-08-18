@@ -184,7 +184,7 @@ def main() -> None:
                     endpoint = f"http://127.0.0.1:{args.port}/generate_gapemp"
                 extra = None
                 if method == "qafd_recursive_h1_t2":
-                    extra = {"neighbors": [sorted(n) for n in h1_adjacency], "rounds": 2}
+                    extra = {"neighbors": [sorted(n) for n in h1_adjacency], "rounds": 2, "max_new_tokens": 128}
                 generated, seconds = request_generation(endpoint, blocks, extra)
                 em, f1 = score_prediction(generated, answers[question])
                 totals[method]["em"] += em

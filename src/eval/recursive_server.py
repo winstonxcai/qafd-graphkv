@@ -26,7 +26,7 @@ def prefill(model, tokenizer, text):
     return clone_cache(output.past_key_values)
 
 
-def generate_recursive(model, tokenizer, emb, blocks, neighbors, rounds):
+def generate_recursive(model, tokenizer, emb, blocks, neighbors, rounds, max_new_tokens=128):
     prefix, _middle, *contexts, query = blocks
     passages = contexts
     caches = [prefill(model, tokenizer, passage) for passage in passages]
@@ -46,7 +46,7 @@ def generate_recursive(model, tokenizer, emb, blocks, neighbors, rounds):
     generated = query_ids
     answer = []
     with torch.inference_mode():
-        for _ in range(1024):
+        for _ in range(max_new_tokens):
             output = model(generated, past_key_values=merged, use_cache=True)
             merged = output.past_key_values
             token = torch.argmax(output.logits[:, -1, :], dim=-1).unsqueeze(-1)
@@ -74,7 +74,15 @@ def main():
     @app.post("/generate_recursive")
     def endpoint():
         form = request.get_json()
-        generated = generate_recursive(model, tokenizer, emb, form["blocks"], form["neighbors"], form.get("rounds", 2))
+        generated = generate_recursive(
+            model,
+            tokenizer,
+            emb,
+            form["blocks"],
+            form["neighbors"],
+            form.get("rounds", 2),
+            form.get("max_new_tokens", 128),
+        )
         return {"ret": 0, "generated": generated, "message": ""}
 
     app.run(host="0.0.0.0", port=args.port)
