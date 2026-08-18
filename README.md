@@ -860,11 +860,12 @@ topology and `h <= 0`/`h <= 2` were ablations.
 
 | Method | EM | F1 | Avg request latency |
 |---|---:|---:|---:|
-| Sequential | 0.640 | 0.119 | 1.885 s |
-| Original Graph-KV | 0.640 | 0.110 | 2.657 s |
-| QAFD ordering, `h <= 0` | 0.600 | 0.114 | 2.468 s |
-| QAFD ordering, `h <= 1` | **0.680** | 0.118 | 2.389 s |
-| QAFD ordering, `h <= 2` | 0.600 | 0.107 | 2.604 s |
+| Sequential | 0.640 | 0.119 | 1.870 s |
+| Block-RAG | 0.600 | 0.104 | 5.209 s |
+| Original Graph-KV | 0.640 | 0.110 | 2.640 s |
+| QAFD ordering, `h <= 0` | 0.600 | 0.114 | 2.458 s |
+| QAFD ordering, `h <= 1` | **0.680** | 0.118 | 2.381 s |
+| QAFD ordering, `h <= 2` | 0.600 | 0.107 | 2.598 s |
 
 The `h <= 1` ordering is the strongest initial result by exact match: 34/50
 questions were scored as correct, compared with 32/50 for sequential and
@@ -877,6 +878,7 @@ The raw per-method JSONL files and summary are stored on the GPU server at:
 
 ```text
 /mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_50_k15/
+/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_50_k15_block/
 ```
 
 The full recursive QAFD-GraphKV comparison, including `T=2` propagation and
