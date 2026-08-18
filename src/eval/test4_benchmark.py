@@ -173,14 +173,26 @@ def main() -> None:
                 "block_rag": documents,
                 "graphkv_original": base_docs,
             }
+            vertex_orders = {}
             for h in (0, 1, 2):
                 vertex_order = graph_cache[h].order(vertices)
+                vertex_orders[h] = vertex_order
                 by_vertex = {vertex: doc for vertex, doc in zip(vertices, documents)}
                 orders[f"qafd_h{h}"] = [by_vertex[vertex] for vertex in vertex_order]
             if args.include_recursive or args.method == "qafd_recursive_h1_t2":
                 orders["qafd_recursive_h1_t2"] = orders["qafd_h1"]
 
-            h1_adjacency = graph_cache[1].adjacency(vertices)
+            # PassageGraph.adjacency returns indices in retrieval order. The
+            # recursive endpoint receives passages in QAFD h<=1 order, so
+            # remap every edge into that same order before propagation.
+            original_h1_adjacency = graph_cache[1].adjacency(vertices)
+            original_index = {vertex: index for index, vertex in enumerate(vertices)}
+            h1_order = [original_index[vertex] for vertex in vertex_orders[1]]
+            old_to_new = {old: new for new, old in enumerate(h1_order)}
+            h1_adjacency = [
+                {old_to_new[neighbor] for neighbor in original_h1_adjacency[old]}
+                for old in h1_order
+            ]
 
             for method in methods:
                 ordered_docs = orders[method]

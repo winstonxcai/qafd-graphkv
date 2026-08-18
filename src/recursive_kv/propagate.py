@@ -30,7 +30,13 @@ def propagate_one_round(model, tokenizer, emb, passages, previous, neighbors):
         for text in passages
     ]
     for node, text in enumerate(passages):
-        source = concat_sources([previous[j] for j in neighbors[node]])
+        node_neighbors = neighbors[node]
+        if not node_neighbors:
+            # An isolated passage receives no messages, so its state remains
+            # unchanged for this propagation round.
+            next_caches.append(clone_cache(previous[node]))
+            continue
+        source = concat_sources([previous[j] for j in node_neighbors])
         source_len = source.key_cache[0].shape[-2]
         tokens = tokenizer(text, return_tensors="pt", add_special_tokens=False).input_ids
         with torch.inference_mode():
