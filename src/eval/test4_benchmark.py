@@ -141,7 +141,7 @@ def main() -> None:
     prefix = "<|user|>\nYou are an intelligent AI assistant. Please answer questions based on the user instructions. Below are some reference documents that may help you in answering the user's question.\n\n"
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    methods = ["sequential", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2", "qafd_recursive_h1_t2"]
+    methods = ["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2", "qafd_recursive_h1_t2"]
     handles = {method: (output_dir / f"{method}.jsonl").open("w") for method in methods}
     graph_cache = {h: PassageGraph(graph, h) for h in (0, 1, 2)}
     totals = {method: {"em": 0.0, "f1": 0.0, "seconds": 0.0} for method in methods}
@@ -180,6 +180,8 @@ def main() -> None:
                     endpoint = f"http://127.0.0.1:{args.port}/generate_vanilla"
                 elif method == "qafd_recursive_h1_t2":
                     endpoint = f"http://127.0.0.1:{args.recursive_port}/generate_recursive"
+                elif method == "block_rag":
+                    endpoint = f"http://127.0.0.1:{args.port}/generate_block"
                 else:
                     endpoint = f"http://127.0.0.1:{args.port}/generate_gapemp"
                 extra = None
