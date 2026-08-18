@@ -1,9 +1,7 @@
 """Test 4: compare GraphKV generation with QAFD-derived passage ordering.
 
-This is the first runnable Test 4 slice. It keeps the same retrieved passages
-for every method and changes only the passage order supplied to GraphKV's
-official ``gapemp`` endpoint. Recursive cache propagation is intentionally not
-claimed here; it remains a separate experiment.
+The recursive row uses the project recursive inference server and propagates
+KV caches for two rounds over the h<=1 passage graph.
 """
 
 from __future__ import annotations
@@ -79,13 +77,17 @@ class PassageGraph:
                 break
         return False
 
-    def order(self, vertices: list[int]) -> list[int]:
+    def adjacency(self, vertices: list[int]) -> list[set[int]]:
         adjacency = {i: set() for i in range(len(vertices))}
         for i in range(len(vertices)):
             for j in range(i + 1, len(vertices)):
                 if self._bounded(vertices[i], vertices[j]):
                     adjacency[i].add(j)
                     adjacency[j].add(i)
+        return [adjacency[i] for i in range(len(vertices))]
+
+    def order(self, vertices: list[int]) -> list[int]:
+        adjacency = self.adjacency(vertices)
         ordered: list[int] = []
         seen: set[int] = set()
         for root in range(len(vertices)):
@@ -103,11 +105,11 @@ class PassageGraph:
         return [vertices[i] for i in ordered]
 
 
-def request_generation(url: str, blocks: list[str]) -> tuple[str, float]:
+def request_generation(url: str, blocks: list[str], extra: dict | None = None) -> tuple[str, float]:
     start = time.perf_counter()
     response = requests.post(
         url,
-        data=json.dumps({"blocks": blocks}),
+        data=json.dumps({"blocks": blocks, **(extra or {})}),
         headers={"Content-Type": "application/json"},
         timeout=1800,
     )
@@ -122,6 +124,7 @@ def main() -> None:
     parser.add_argument("--graph", required=True)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--port", type=int, default=8771)
+    parser.add_argument("--recursive-port", type=int, default=8772)
     parser.add_argument("--k", type=int, default=15)
     parser.add_argument("--limit", type=int, default=50)
     args = parser.parse_args()
@@ -138,7 +141,7 @@ def main() -> None:
     prefix = "<|user|>\nYou are an intelligent AI assistant. Please answer questions based on the user instructions. Below are some reference documents that may help you in answering the user's question.\n\n"
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    methods = ["sequential", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2"]
+    methods = ["sequential", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2", "qafd_recursive_h1_t2"]
     handles = {method: (output_dir / f"{method}.jsonl").open("w") for method in methods}
     graph_cache = {h: PassageGraph(graph, h) for h in (0, 1, 2)}
     totals = {method: {"em": 0.0, "f1": 0.0, "seconds": 0.0} for method in methods}
@@ -168,14 +171,21 @@ def main() -> None:
                 by_vertex = {vertex: doc for vertex, doc in zip(vertices, documents)}
                 orders[f"qafd_h{h}"] = [by_vertex[vertex] for vertex in vertex_order]
 
+            h1_adjacency = graph_cache[1].adjacency(vertices)
+
             for method, ordered_docs in orders.items():
                 contexts = [f"- Title: {d['title']}\n{d['text']}\n" for d in ordered_docs]
                 blocks = [prefix, ""] + contexts + [suffix]
                 if method == "sequential":
                     endpoint = f"http://127.0.0.1:{args.port}/generate_vanilla"
+                elif method == "qafd_recursive_h1_t2":
+                    endpoint = f"http://127.0.0.1:{args.recursive_port}/generate_recursive"
                 else:
                     endpoint = f"http://127.0.0.1:{args.port}/generate_gapemp"
-                generated, seconds = request_generation(endpoint, blocks)
+                extra = None
+                if method == "qafd_recursive_h1_t2":
+                    extra = {"neighbors": [sorted(n) for n in h1_adjacency], "rounds": 2}
+                generated, seconds = request_generation(endpoint, blocks, extra)
                 em, f1 = score_prediction(generated, answers[question])
                 totals[method]["em"] += em
                 totals[method]["f1"] += f1
