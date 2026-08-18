@@ -14,7 +14,7 @@ from transformers.models.llama.modeling_llama import LlamaRotaryEmbedding
 GRAPHKV_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "third_party", "GraphKV"))
 sys.path.insert(0, GRAPHKV_ROOT)
 from pcw import apply_pkv_rotary_position_embeddings, concact_pkv  # noqa: E402
-from recursive_kv.propagate import clone_cache, propagate_one_round  # noqa: E402
+from src.recursive_kv.propagate import clone_cache, propagate_one_round  # noqa: E402
 
 app = Flask(__name__)
 
