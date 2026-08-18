@@ -357,6 +357,24 @@ T\text{ passage hops of information propagation}.
 
 This is a much better first test than jumping directly to QA accuracy.
 
+## Test 1 result
+
+The three-node chain test passed on one NVIDIA A800 using the RED/BLUE
+variants for `P2`:
+
+```text
+round1_p0_distance = 0.0
+round2_p0_distance = 5.9296875
+```
+
+This confirms that `P0` cannot distinguish the RED and BLUE cases after one
+propagation round, but does distinguish them after two rounds. The result was
+written to:
+
+```text
+/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test1_synthetic.json
+```
+
 ---
 
 # 6. Don't rewrite Graph-KV's cache machinery
