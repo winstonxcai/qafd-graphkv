@@ -167,6 +167,7 @@ def main() -> None:
             base_docs = sorted(documents, key=lambda doc: doc["score"])
             orders = {
                 "sequential": documents,
+                "block_rag": documents,
                 "graphkv_original": base_docs,
             }
             for h in (0, 1, 2):
