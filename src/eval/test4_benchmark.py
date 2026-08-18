@@ -182,7 +182,8 @@ def main() -> None:
 
             h1_adjacency = graph_cache[1].adjacency(vertices)
 
-            for method, ordered_docs in orders.items():
+            for method in methods:
+                ordered_docs = orders[method]
                 contexts = [f"- Title: {d['title']}\n{d['text']}\n" for d in ordered_docs]
                 blocks = [prefix, ""] + contexts + [suffix]
                 if method == "sequential":
