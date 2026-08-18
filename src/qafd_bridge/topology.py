@@ -50,16 +50,9 @@ class _EntityIndex:
         return self.cache[vertex]
 
 
-def _entity_path(index: _EntityIndex, source: int, target: int, max_hops: int):
-    """Find a shortest bounded path represented by entity node names.
-
-    A path ``passage-entity-passage`` has entity-hop length 0. Each additional
-    entity-to-entity transition increases the entity-hop length by one.
-    """
+def _bounded_search(index: _EntityIndex, source: int, max_hops: int):
+    """Search once from a passage's entities and reuse it for all targets."""
     source_entities = index.entity_neighbors(source)
-    target_entities = set(index.entity_neighbors(target))
-    if not source_entities or not target_entities:
-        return None
     queue = deque()
     distance = {}
     parent = {}
@@ -69,13 +62,6 @@ def _entity_path(index: _EntityIndex, source: int, target: int, max_hops: int):
         parent[entity] = None
     while queue:
         node = queue.popleft()
-        if node in target_entities:
-            path = []
-            current = node
-            while current is not None:
-                path.append(index.names[current])
-                current = parent[current]
-            return tuple(reversed(path))
         if distance[node] >= max_hops:
             continue
         for neighbor in index.entity_neighbors(node):
@@ -83,7 +69,15 @@ def _entity_path(index: _EntityIndex, source: int, target: int, max_hops: int):
                 distance[neighbor] = distance[node] + 1
                 parent[neighbor] = node
                 queue.append(neighbor)
-    return None
+    return distance, parent
+
+
+def _path(index: _EntityIndex, parent, node):
+    path = []
+    while node is not None:
+        path.append(index.names[node])
+        node = parent[node]
+    return tuple(reversed(path))
 
 
 def _components(node_count: int, edges: list[tuple[int, int]]):
@@ -120,10 +114,19 @@ def analyze_passages(
     edges: list[tuple[int, int]] = []
     hop_histogram: Counter[int] = Counter()
     selected_entities: set[str] = set()
+    searches = {
+        source: _bounded_search(index, source, max_hops)
+        for source in passage_vertices
+    }
     for left, right in combinations(range(len(passage_vertices)), 2):
-        path = _entity_path(index, passage_vertices[left], passage_vertices[right], max_hops)
-        if path is None:
+        source = passage_vertices[left]
+        target_entities = index.entity_neighbors(passage_vertices[right])
+        distance, parent = searches[source]
+        reachable = [entity for entity in target_entities if entity in distance]
+        if not reachable:
             continue
+        target = min(reachable, key=distance.__getitem__)
+        path = _path(index, parent, target)
         edges.append((left, right))
         hop_histogram[len(path) - 1] += 1
         selected_entities.update(path)
