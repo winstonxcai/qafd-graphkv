@@ -507,6 +507,37 @@ It merely preserves information QAFD currently throws away.
 
 The retriever's `_graph_search` already calls this function after constructing the entity/passages seeds, so this is the natural trace point. ([[GitHub](https://github.com/Tarzanagh/QAFD-RAG/blob/main/src/passage_entity/retriever.py)][7])
 
+## Test 2 retrieval-only result
+
+The unmodified retrieval-only QAFD path was run on 20 HotpotQA questions with
+the prebuilt multihop KG and `nvidia-nv-embed-v2`:
+
+```bash
+python benchmarks/run.py \
+  --task multihop \
+  --dataset hotpotqa \
+  --questions 20 \
+  --skip_qa
+```
+
+Results:
+
+| Metric | Value |
+|---|---:|
+| Retrieval time | 25.3 s |
+| QAFD time | 15.3 s |
+| Recall@1 | 0.400 |
+| Recall@2 | 0.750 |
+| Recall@5 | 0.925 |
+| Recall@10 | 0.975 |
+| Recall@20 | 1.000 |
+
+QAFD converged for all 20 questions. The optional OpenAI reranker returned
+HTTP 401 because no API key was configured; QAFD fell back to embedding-ranked
+facts, so this run validates retrieval/QAFD execution but is not an
+OpenAI-reranker comparison. The node-score trace and JSONL topology export
+remain the next part of Test 2.
+
 ---
 
 # 8. Serialize QAFD results
