@@ -126,6 +126,7 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8771)
     parser.add_argument("--recursive-port", type=int, default=8772)
     parser.add_argument("--include-recursive", action="store_true")
+    parser.add_argument("--method", choices=["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2", "qafd_recursive_h1_t2"])
     parser.add_argument("--k", type=int, default=15)
     parser.add_argument("--limit", type=int, default=50)
     args = parser.parse_args()
@@ -145,6 +146,8 @@ def main() -> None:
     methods = ["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2"]
     if args.include_recursive:
         methods.append("qafd_recursive_h1_t2")
+    if args.method:
+        methods = [args.method]
     handles = {method: (output_dir / f"{method}.jsonl").open("w") for method in methods}
     graph_cache = {h: PassageGraph(graph, h) for h in (0, 1, 2)}
     totals = {method: {"em": 0.0, "f1": 0.0, "seconds": 0.0} for method in methods}
@@ -174,7 +177,7 @@ def main() -> None:
                 vertex_order = graph_cache[h].order(vertices)
                 by_vertex = {vertex: doc for vertex, doc in zip(vertices, documents)}
                 orders[f"qafd_h{h}"] = [by_vertex[vertex] for vertex in vertex_order]
-            if args.include_recursive:
+            if args.include_recursive or args.method == "qafd_recursive_h1_t2":
                 orders["qafd_recursive_h1_t2"] = orders["qafd_h1"]
 
             h1_adjacency = graph_cache[1].adjacency(vertices)
