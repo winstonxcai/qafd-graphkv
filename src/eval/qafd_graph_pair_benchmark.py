@@ -280,8 +280,11 @@ def main() -> None:
         choices=["default", "concise", "multihop"],
         default="concise",
     )
+    parser.add_argument("--start", type=int, default=0)
     parser.add_argument("--limit", type=int, default=250)
     args = parser.parse_args()
+    if args.start < 0:
+        parser.error("--start must be non-negative")
     if args.center_integration_checkpoint and not args.center_query_focus:
         parser.error("center integration checkpoint requires center query focus")
     if not 1 <= args.min_neighbors <= args.max_neighbors:
@@ -291,7 +294,13 @@ def main() -> None:
     if args.fill_hops is not None and args.fill_hops < args.hops:
         parser.error("fill hops cannot be smaller than base hops")
 
-    retrieval = json.loads(args.results.read_text())["per_query"][: args.limit]
+    all_retrieval = json.loads(args.results.read_text())["per_query"]
+    retrieval = all_retrieval[args.start : args.start + args.limit]
+    if len(retrieval) != args.limit:
+        parser.error(
+            f"requested questions [{args.start}, {args.start + args.limit}) "
+            f"but only {len(all_retrieval)} retrieval results are available"
+        )
     question_rows = json.loads(args.questions.read_text())
     answers = {row["question"]: [row["answer"]] for row in question_rows}
     graph = ig.Graph.Read_Pickle(args.graph)
@@ -323,7 +332,8 @@ def main() -> None:
     totals = {"em": 0.0, "f1": 0.0, "seconds": 0.0}
 
     with output_path.open("w") as handle:
-        for qid, item in enumerate(retrieval):
+        for offset, item in enumerate(retrieval):
+            qid = args.start + offset
             docs = item["docs"][: args.pool_k]
             scores = (item.get("doc_scores") or [args.pool_k - i for i in range(args.pool_k)])[: args.pool_k]
             vertices = [content_to_vertex.get(doc) for doc in docs]

@@ -18,6 +18,7 @@ ROOT=/mnt/beegfs/home/Winston/qafd-graphkv
 GRAPHKV_PY=/mnt/beegfs/home/Winston/miniconda3/envs/graphkv/bin/python
 QAFD_PY=/mnt/beegfs/home/Winston/miniconda3/envs/qafd-rag/bin/python
 POOL_K=${POOL_K:-20}
+START=${START:-0}
 HOPS=${HOPS:-0}
 CENTER_RULE=${CENTER_RULE:-best_edge}
 MAX_NEIGHBORS=${MAX_NEIGHBORS:-4}
@@ -71,6 +72,7 @@ PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
   --strategy-name "$STRATEGY_NAME" \
   --port "$PORT" \
   --pool-k "$POOL_K" \
+  --start "$START" \
   --hops "$HOPS" \
   --center-rule "$CENTER_RULE" \
   --max-neighbors "$MAX_NEIGHBORS" \
