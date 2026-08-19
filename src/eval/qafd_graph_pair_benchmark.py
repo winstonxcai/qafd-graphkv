@@ -38,15 +38,27 @@ def query_overlap(question: str, passage: str) -> int:
     return len(question_terms & passage_terms)
 
 
-def query_conditioned_center(passage: str, question: str, enabled: bool) -> str:
+def query_conditioned_center(
+    passage: str,
+    question: str,
+    enabled: bool,
+    integration_checkpoint: bool = False,
+) -> str:
     if not enabled:
         return passage
-    return (
+    center = (
         "Question-directed graph integration:\n"
         f"Question: {question}\n"
         "Use the linked neighbor evidence while reading this center passage.\n"
         + passage
     )
+    if integration_checkpoint:
+        center += (
+            "\nGraph integration checkpoint: connect the question, linked neighbor "
+            "evidence, and center evidence now; retain only the shortest supported "
+            "answer for the final response.\n"
+        )
+    return center
 
 
 def choose_center_and_neighbors(
@@ -231,6 +243,7 @@ def main() -> None:
     parser.add_argument("--max-neighbors", type=int, default=4)
     parser.add_argument("--max-stars", type=int, default=1)
     parser.add_argument("--center-query-focus", action="store_true")
+    parser.add_argument("--center-integration-checkpoint", action="store_true")
     parser.add_argument(
         "--prompt-style",
         choices=["default", "concise", "multihop"],
@@ -238,6 +251,8 @@ def main() -> None:
     )
     parser.add_argument("--limit", type=int, default=250)
     args = parser.parse_args()
+    if args.center_integration_checkpoint and not args.center_query_focus:
+        parser.error("center integration checkpoint requires center query focus")
 
     retrieval = json.loads(args.results.read_text())["per_query"][: args.limit]
     question_rows = json.loads(args.questions.read_text())
@@ -297,7 +312,10 @@ def main() -> None:
             neighbor_index_groups = [neighbors for _, neighbors in stars]
             centers = [
                 query_conditioned_center(
-                    formatted[index], question, args.center_query_focus
+                    formatted[index],
+                    question,
+                    args.center_query_focus,
+                    args.center_integration_checkpoint,
                 )
                 for index in center_indices
             ]
@@ -344,6 +362,9 @@ def main() -> None:
                         "center_indices": center_indices,
                         "neighbor_index_groups": neighbor_index_groups,
                         "center_query_focus": args.center_query_focus,
+                        "center_integration_checkpoint": (
+                            args.center_integration_checkpoint
+                        ),
                     }
                 )
                 + "\n"

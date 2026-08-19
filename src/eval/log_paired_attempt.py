@@ -16,6 +16,8 @@ MATCHED_CONTEXT_FIELDS = (
     "neighbor_indices",
     "center_indices",
     "neighbor_index_groups",
+    "center_query_focus",
+    "center_integration_checkpoint",
 )
 CSV_COLUMNS = [
     "timestamp",

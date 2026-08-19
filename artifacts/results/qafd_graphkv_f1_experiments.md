@@ -153,3 +153,31 @@ Two parallel component caches increased EM slightly but reduced answer precision
 ### Next Experiment
 
 Return to the strongest one-star topology and make its center integration query-conditioned by placing the question and a graph-integration instruction before the center passage for both methods. This lets GraphKV integrate neighbor caches with the actual query rather than statically.
+
+## Attempt 6 — query_conditioned_center_bestedge_h0_n4
+
+**Timestamp:** 2026-08-19T11:14:21+08:00  
+**Hypothesis:** The center passage must know the question while attending to GraphKV neighbor caches; query-conditioned center prefill should suppress irrelevant cached evidence and improve answer precision over flat Sequential serialization.  
+**Changes:** Returned to the best one-star h<=0 n=4 topology and added identical question-directed center text to both methods. No answer metadata or gold passages are used.  
+**Matched Sequential configuration:** Fresh Sequential run with the identical center, neighbors, query-conditioned center text, order, Tulu3-Block-FT model, concise final prompt, greedy 256-token cap, BF16 FlashAttention2, and A800 hardware.  
+**Important hyperparameters:** pool_k=20; h=0; center_rule=best_edge; max_neighbors=4; max_stars=1; center_query_focus=true; prompt_style=concise; limit=250; greedy; max_new_tokens=256.  
+
+### Results
+
+| Method | EM | F1 | Avg Latency |
+|---|---:|---:|---:|
+| Sequential | 0.616000 | 0.460650 | 0.457007 s |
+| QAFD + GraphKV | 0.604000 | 0.482109 | 0.612495 s |
+
+**Delta EM:** -0.012000  
+**Delta F1:** +0.021459  
+**Latency ratio:** 1.340229x  
+**Outcome:** target not met.  
+
+### Interpretation
+
+This is the first positive matched F1 result. Query-conditioned cache integration raised QAFD+GraphKV to 0.482109 versus Sequential 0.460650, a +0.021459 gain, and reduced the latency ratio to 1.340. The gain remains 0.028541 below the target, so the query-aware integration signal should be strengthened rather than discarded.
+
+### Next Experiment
+
+Append a dedicated graph-integration checkpoint after the center passage. Those final center tokens can causally aggregate the question, neighbors, and center into a compact latent state before the final answer query; both methods receive the same checkpoint text.

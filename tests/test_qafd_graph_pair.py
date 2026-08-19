@@ -48,6 +48,15 @@ def test_query_conditioned_center_is_shared_prompt_text():
     assert query_conditioned_center("passage", "question?", enabled=False) == "passage"
 
 
+def test_query_conditioned_center_can_add_latent_integration_checkpoint():
+    center = query_conditioned_center(
+        "passage", "question?", enabled=True, integration_checkpoint=True
+    )
+
+    assert center.startswith("Question-directed graph integration:")
+    assert center.endswith("shortest supported answer for the final response.\n")
+
+
 def test_bridge_target_directs_edge_away_from_question_facing_passage():
     adjacency = [{1}, {0, 2}, {1}]
     scores = [0.9, 0.8, 0.7]

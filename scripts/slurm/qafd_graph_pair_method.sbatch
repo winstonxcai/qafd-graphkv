@@ -23,6 +23,7 @@ CENTER_RULE=${CENTER_RULE:-best_edge}
 MAX_NEIGHBORS=${MAX_NEIGHBORS:-4}
 MAX_STARS=${MAX_STARS:-1}
 CENTER_QUERY_FOCUS=${CENTER_QUERY_FOCUS:-0}
+CENTER_INTEGRATION_CHECKPOINT=${CENTER_INTEGRATION_CHECKPOINT:-0}
 PROMPT_STYLE=${PROMPT_STYLE:-concise}
 LIMIT=${LIMIT:-250}
 
@@ -51,6 +52,9 @@ done
 EXTRA_ARGS=()
 if [[ "$CENTER_QUERY_FOCUS" -eq 1 ]]; then
   EXTRA_ARGS+=(--center-query-focus)
+fi
+if [[ "$CENTER_INTEGRATION_CHECKPOINT" -eq 1 ]]; then
+  EXTRA_ARGS+=(--center-integration-checkpoint)
 fi
 
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
