@@ -23,7 +23,7 @@ OUT_DIR=$OUT_ROOT/$METHOD
 
 mkdir -p "$OUT_DIR"
 
-if [[ "$METHOD" == "qafd_recursive_h1_t2" ]]; then
+if [[ "$METHOD" == "qafd_recursive_h1_t2" || "$METHOD" == "qafd_adaptive_recursive_h1" ]]; then
   cd "$ROOT"
   PYTHONPATH="$ROOT" "$GRAPHKV_PY" -m src.eval.recursive_server \
     --model ldsjmdy/Tulu3-Block-FT \

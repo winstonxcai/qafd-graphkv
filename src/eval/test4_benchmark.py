@@ -1,7 +1,8 @@
 """Test 4: compare GraphKV generation with QAFD-derived passage ordering.
 
-The recursive row uses the project recursive inference server and propagates
-KV caches for two rounds over the h<=1 passage graph.
+The recursive rows use the project recursive inference server and propagate
+KV caches over the h<=1 passage graph. The adaptive row uses
+``T=min(diameter(G_P), 3)`` independently for each question.
 """
 
 from __future__ import annotations
@@ -73,6 +74,27 @@ def remap_adjacency(adjacency: list[set[int]], old_order: list[int]) -> list[set
         {old_to_new[neighbor] for neighbor in adjacency[old]}
         for old in old_order
     ]
+
+
+def graph_diameter(adjacency: list[set[int]]) -> int:
+    """Return the largest finite shortest-path distance in an undirected graph.
+
+    Test 4 defines adaptive recursion from the diameter of the retrieved
+    passage graph. For a disconnected graph this is the maximum diameter of
+    any connected component; an empty or singleton graph has diameter zero.
+    """
+    diameter = 0
+    for start in range(len(adjacency)):
+        distances = {start: 0}
+        queue = deque([start])
+        while queue:
+            node = queue.popleft()
+            for neighbor in adjacency[node]:
+                if neighbor not in distances:
+                    distances[neighbor] = distances[node] + 1
+                    queue.append(neighbor)
+        diameter = max(diameter, max(distances.values(), default=0))
+    return diameter
 
 
 def select_graph_indices(
@@ -230,7 +252,19 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8771)
     parser.add_argument("--recursive-port", type=int, default=8772)
     parser.add_argument("--include-recursive", action="store_true")
-    parser.add_argument("--method", choices=["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2", "qafd_recursive_h1_t2"])
+    parser.add_argument(
+        "--method",
+        choices=[
+            "sequential",
+            "block_rag",
+            "graphkv_original",
+            "qafd_h0",
+            "qafd_h1",
+            "qafd_h2",
+            "qafd_recursive_h1_t2",
+            "qafd_adaptive_recursive_h1",
+        ],
+    )
     parser.add_argument("--strategy-name")
     parser.add_argument(
         "--prompt-style",
@@ -276,7 +310,7 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     methods = ["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2"]
     if args.include_recursive:
-        methods.append("qafd_recursive_h1_t2")
+        methods.extend(["qafd_recursive_h1_t2", "qafd_adaptive_recursive_h1"])
     if args.method:
         methods = [args.method]
     labels = {
@@ -337,8 +371,13 @@ def main() -> None:
                 )
                 by_vertex = {vertex: doc for vertex, doc in zip(vertices, documents)}
                 orders[f"qafd_h{h}"] = [by_vertex[vertex] for vertex in vertex_order]
-            if args.include_recursive or args.method == "qafd_recursive_h1_t2":
-                orders["qafd_recursive_h1_t2"] = orders["qafd_h1"]
+            recursive_methods = {
+                "qafd_recursive_h1_t2",
+                "qafd_adaptive_recursive_h1",
+            }
+            if args.include_recursive or args.method in recursive_methods:
+                for recursive_method in recursive_methods:
+                    orders[recursive_method] = orders["qafd_h1"]
 
             # PassageGraph.adjacency returns indices in retrieval order. The
             # recursive endpoint receives passages in QAFD h<=1 order, so
@@ -368,15 +407,28 @@ def main() -> None:
                 blocks = [prefix, ""] + contexts + [suffix]
                 if method == "sequential":
                     endpoint = f"http://127.0.0.1:{args.port}/generate_vanilla"
-                elif method == "qafd_recursive_h1_t2":
+                elif method in {
+                    "qafd_recursive_h1_t2",
+                    "qafd_adaptive_recursive_h1",
+                }:
                     endpoint = f"http://127.0.0.1:{args.recursive_port}/generate_recursive"
                 elif method == "block_rag":
                     endpoint = f"http://127.0.0.1:{args.port}/generate_block"
                 else:
                     endpoint = f"http://127.0.0.1:{args.port}/generate_gapemp"
                 extra = None
-                if method == "qafd_recursive_h1_t2":
-                    extra = {"neighbors": [sorted(n) for n in h1_adjacency], "rounds": 2, "max_new_tokens": 128}
+                if method in {
+                    "qafd_recursive_h1_t2",
+                    "qafd_adaptive_recursive_h1",
+                }:
+                    rounds = 2
+                    if method == "qafd_adaptive_recursive_h1":
+                        rounds = min(graph_diameter(h1_adjacency), 3)
+                    extra = {
+                        "neighbors": [sorted(n) for n in h1_adjacency],
+                        "rounds": rounds,
+                        "max_new_tokens": 128,
+                    }
                 generated, seconds = request_generation(endpoint, blocks, extra)
                 em, f1 = score_prediction(generated, answers[question])
                 totals[method]["em"] += em

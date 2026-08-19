@@ -6,6 +6,7 @@ sys.modules.setdefault("igraph", types.SimpleNamespace(Graph=object))
 from src.eval.test4_benchmark import (
     PassageGraph,
     build_suffix,
+    graph_diameter,
     remap_adjacency,
     resolve_order_key,
     select_graph_indices,
@@ -101,3 +102,8 @@ def test_passage_graph_bounded_search_reuse_preserves_hop_semantics():
         {0, 2},
         {0, 1},
     ]
+
+
+def test_graph_diameter_uses_largest_finite_component_diameter():
+    assert graph_diameter([{1}, {0, 2}, {1}, set(), set()]) == 2
+    assert graph_diameter([set(), set()]) == 0
