@@ -286,6 +286,8 @@ def main() -> None:
     parser.add_argument("--context-k", type=int)
     parser.add_argument("--k", type=int, default=15)
     parser.add_argument("--limit", type=int, default=50)
+    parser.add_argument("--matched-prompt", action="store_true")
+    parser.add_argument("--max-new-tokens", type=int)
     args = parser.parse_args()
     if args.strategy_name and not args.method:
         parser.error("--strategy-name requires a single --method")
@@ -305,7 +307,13 @@ def main() -> None:
         for v in graph.vs
         if v["name"].startswith("chunk-") and v["content"]
     }
-    prefix = "<|user|>\nYou are an intelligent AI assistant. Please answer questions based on the user instructions. Below are some reference documents that may help you in answering the user's question.\n\n"
+    prefix = (
+        "<|user|>\nYou are an intelligent AI assistant. Please answer questions based on "
+        "the user instructions. Below are some reference documents that may help you "
+        "in answering the user's question.\n\n"
+    )
+    if args.matched_prompt:
+        prefix = "<|user|>\nYou are an intelligent AI assistant. Answer questions using only the reference documents.\n\n"
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     methods = ["sequential", "block_rag", "graphkv_original", "qafd_h0", "qafd_h1", "qafd_h2"]
@@ -427,8 +435,10 @@ def main() -> None:
                     extra = {
                         "neighbors": [sorted(n) for n in h1_adjacency],
                         "rounds": rounds,
-                        "max_new_tokens": 128,
+                        "max_new_tokens": args.max_new_tokens or 128,
                     }
+                elif args.max_new_tokens is not None:
+                    extra = {"max_new_tokens": args.max_new_tokens}
                 generated, seconds = request_generation(endpoint, blocks, extra)
                 em, f1 = score_prediction(generated, answers[question])
                 totals[method]["em"] += em
