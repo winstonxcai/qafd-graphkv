@@ -9,6 +9,7 @@ from src.eval.qafd_graph_pair_benchmark import (
     choose_center_and_neighbors,
     choose_component_stars,
     query_overlap,
+    query_conditioned_center,
 )
 
 
@@ -35,6 +36,16 @@ def test_isolated_center_falls_back_without_dropping_question():
 
 def test_query_overlap_ignores_question_stopwords():
     assert query_overlap("Who was born in Paris?", "The artist was born in Paris.") == 2
+
+
+def test_query_conditioned_center_is_shared_prompt_text():
+    assert query_conditioned_center("passage", "question?", enabled=True) == (
+        "Question-directed graph integration:\n"
+        "Question: question?\n"
+        "Use the linked neighbor evidence while reading this center passage.\n"
+        "passage"
+    )
+    assert query_conditioned_center("passage", "question?", enabled=False) == "passage"
 
 
 def test_bridge_target_directs_edge_away_from_question_facing_passage():

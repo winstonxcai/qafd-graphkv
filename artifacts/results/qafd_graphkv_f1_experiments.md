@@ -125,3 +125,31 @@ The query-directed orientation changed most stars but reduced both methods and l
 ### Next Experiment
 
 Represent multiple QAFD components inside one GraphKV inference: select the best directed star from each of the two highest-scoring connected components and merge their caches once, while matched Sequential receives the same grouped passages.
+
+## Attempt 5 — graph_batch_multistar_h0_s2_n2
+
+**Timestamp:** 2026-08-19T11:08:20+08:00  
+**Hypothesis:** Separating disconnected QAFD components into independent GraphKV cache regions should preserve evidence from multiple plausible subgraphs while avoiding cross-component prefill interference.  
+**Changes:** Added the official GraphKV graph-batch path, deterministic component-level star selection, and a matched grouped Sequential serializer. Stars are disjoint because they come from separate connected components.  
+**Matched Sequential configuration:** Fresh Sequential run over exactly the same star centers, neighbor groups, group order, model, concise prompt, greedy 256-token cap, BF16 FlashAttention2, and A800 hardware.  
+**Important hyperparameters:** pool_k=20; h=0; max_stars=2; max_neighbors_per_star=2; component edge ranking=sum of QAFD scores; prompt_style=concise; limit=250; greedy; max_new_tokens=256.  
+
+### Results
+
+| Method | EM | F1 | Avg Latency |
+|---|---:|---:|---:|
+| Sequential | 0.580000 | 0.473635 | 0.417997 s |
+| QAFD + GraphKV | 0.588000 | 0.402070 | 0.716890 s |
+
+**Delta EM:** +0.008000  
+**Delta F1:** -0.071565  
+**Latency ratio:** 1.715058x  
+**Outcome:** target not met.  
+
+### Interpretation
+
+Two parallel component caches increased EM slightly but reduced answer precision: QAFD+GraphKV EM was 0.588 versus 0.580, while F1 was 0.402070 versus 0.473635. The batch cache preserves additional candidate evidence but does not condition its component integration on the question, so generated answers contain more irrelevant tokens.
+
+### Next Experiment
+
+Return to the strongest one-star topology and make its center integration query-conditioned by placing the question and a graph-integration instruction before the center passage for both methods. This lets GraphKV integrate neighbor caches with the actual query rather than statically.

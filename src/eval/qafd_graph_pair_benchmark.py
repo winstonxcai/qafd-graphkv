@@ -38,6 +38,17 @@ def query_overlap(question: str, passage: str) -> int:
     return len(question_terms & passage_terms)
 
 
+def query_conditioned_center(passage: str, question: str, enabled: bool) -> str:
+    if not enabled:
+        return passage
+    return (
+        "Question-directed graph integration:\n"
+        f"Question: {question}\n"
+        "Use the linked neighbor evidence while reading this center passage.\n"
+        + passage
+    )
+
+
 def choose_center_and_neighbors(
     adjacency: list[set[int]],
     scores: list[float],
@@ -219,6 +230,7 @@ def main() -> None:
     )
     parser.add_argument("--max-neighbors", type=int, default=4)
     parser.add_argument("--max-stars", type=int, default=1)
+    parser.add_argument("--center-query-focus", action="store_true")
     parser.add_argument(
         "--prompt-style",
         choices=["default", "concise", "multihop"],
@@ -283,6 +295,12 @@ def main() -> None:
                 ]
             center_indices = [center for center, _ in stars]
             neighbor_index_groups = [neighbors for _, neighbors in stars]
+            centers = [
+                query_conditioned_center(
+                    formatted[index], question, args.center_query_focus
+                )
+                for index in center_indices
+            ]
             payload = {
                 "prefix": prefix,
                 "query": build_suffix(question, args.prompt_style),
@@ -290,7 +308,7 @@ def main() -> None:
             if args.max_stars > 1:
                 payload.update(
                     {
-                        "centers": [formatted[index] for index in center_indices],
+                        "centers": centers,
                         "neighbor_groups": [
                             [formatted[index] for index in neighbors]
                             for neighbors in neighbor_index_groups
@@ -300,7 +318,7 @@ def main() -> None:
             else:
                 payload.update(
                     {
-                        "center": formatted[center_indices[0]],
+                        "center": centers[0],
                         "neighbors": [
                             formatted[index] for index in neighbor_index_groups[0]
                         ],
@@ -325,6 +343,7 @@ def main() -> None:
                         "neighbor_indices": neighbor_index_groups[0],
                         "center_indices": center_indices,
                         "neighbor_index_groups": neighbor_index_groups,
+                        "center_query_focus": args.center_query_focus,
                     }
                 )
                 + "\n"

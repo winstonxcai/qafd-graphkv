@@ -22,6 +22,7 @@ HOPS=${HOPS:-0}
 CENTER_RULE=${CENTER_RULE:-best_edge}
 MAX_NEIGHBORS=${MAX_NEIGHBORS:-4}
 MAX_STARS=${MAX_STARS:-1}
+CENTER_QUERY_FOCUS=${CENTER_QUERY_FOCUS:-0}
 PROMPT_STYLE=${PROMPT_STYLE:-concise}
 LIMIT=${LIMIT:-250}
 
@@ -47,6 +48,11 @@ for _ in $(seq 1 180); do
 done
 [[ "$READY" -eq 1 ]] || { echo "Server readiness timeout" >&2; exit 1; }
 
+EXTRA_ARGS=()
+if [[ "$CENTER_QUERY_FOCUS" -eq 1 ]]; then
+  EXTRA_ARGS+=(--center-query-focus)
+fi
+
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
   --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
   --questions third_party/QAFD-RAG/data/multihop/hotpotqa.json \
@@ -61,4 +67,5 @@ PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
   --max-neighbors "$MAX_NEIGHBORS" \
   --max-stars "$MAX_STARS" \
   --prompt-style "$PROMPT_STYLE" \
-  --limit "$LIMIT"
+  --limit "$LIMIT" \
+  "${EXTRA_ARGS[@]}"
