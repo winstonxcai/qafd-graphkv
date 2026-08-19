@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import os
+import shutil
 import sys
 import types
 
@@ -28,6 +29,7 @@ def main():
     parser.add_argument("--dataset", default="hotpotqa")
     parser.add_argument("--questions", type=int, default=20)
     parser.add_argument("--retrieval-top-k", type=int, default=20)
+    parser.add_argument("--save-results", required=True)
     args = parser.parse_args()
 
     root = os.path.abspath(args.qafd_root)
@@ -76,7 +78,22 @@ def main():
         "--retrieval_top_k", str(args.retrieval_top_k),
         "--skip_qa",
     ]
-    benchmark_main()
+    result_path = os.path.join(
+        root,
+        "kg",
+        "multihop",
+        "gpt-4o-mini_nvidia-nv-embed-v2_hotpotqa",
+        "results_hotpotqa.json",
+    )
+    backup_path = result_path + ".qafd_bridge_backup"
+    if os.path.exists(result_path):
+        shutil.copy2(result_path, backup_path)
+    try:
+        benchmark_main()
+        shutil.copy2(result_path, args.save_results)
+    finally:
+        if os.path.exists(backup_path):
+            shutil.move(backup_path, result_path)
 
 
 if __name__ == "__main__":

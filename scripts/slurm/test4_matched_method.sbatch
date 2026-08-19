@@ -16,6 +16,7 @@ QAFD_PY=/mnt/beegfs/home/Winston/miniconda3/envs/qafd-rag/bin/python
 PORT=${PORT:-8791}
 START=${START:-0}
 OUT_ROOT=${OUT_ROOT:-$ROOT/artifacts/results/test4_250_winner_matched_methods}
+RESULTS=${RESULTS:-$ROOT/outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json}
 OUT_DIR=$OUT_ROOT/$METHOD
 
 mkdir -p "$OUT_DIR"
@@ -37,7 +38,7 @@ done
 [[ "$READY" -eq 1 ]] || { echo "Matched server readiness timeout" >&2; exit 1; }
 
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.test4_benchmark \
-  --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
+  --results "$RESULTS" \
   --questions third_party/QAFD-RAG/data/multihop/hotpotqa.json \
   --graph third_party/QAFD-RAG/kg/multihop/gpt-4o-mini_nvidia-nv-embed-v2_hotpotqa/graph.pickle \
   --output-dir "$OUT_DIR" --port "$PORT" --recursive-port "$PORT" \
