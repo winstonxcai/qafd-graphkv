@@ -139,6 +139,12 @@ def select_graph_indices(
     return selected[:limit]
 
 
+def resolve_order_key(method: str, sequential_order: str) -> str:
+    if method != "sequential" or sequential_order == "retrieval":
+        return method
+    return sequential_order
+
+
 class PassageGraph:
     def __init__(self, graph: ig.Graph, max_hops: int):
         self.graph = graph
@@ -229,6 +235,11 @@ def main() -> None:
     )
     parser.add_argument("--include-graph-links", action="store_true")
     parser.add_argument(
+        "--sequential-order",
+        choices=["retrieval", "qafd_h0", "qafd_h1", "qafd_h2"],
+        default="retrieval",
+    )
+    parser.add_argument(
         "--graph-selection",
         choices=["none", "best_edge", "top_component"],
         default="none",
@@ -244,6 +255,8 @@ def main() -> None:
         parser.error("graph selection requires one of the QAFD ordering methods")
     if args.graph_selection != "none" and not args.context_k:
         parser.error("graph selection requires --context-k")
+    if args.sequential_order != "retrieval" and args.method != "sequential":
+        parser.error("--sequential-order is only valid with --method sequential")
 
     results = json.loads(Path(args.results).read_text())["per_query"][: args.limit]
     questions = json.loads(Path(args.questions).read_text())
@@ -329,7 +342,7 @@ def main() -> None:
             h1_adjacency = adjacency_by_h[1]
 
             for method in methods:
-                ordered_docs = orders[method]
+                ordered_docs = orders[resolve_order_key(method, args.sequential_order)]
                 contexts = []
                 graph_h = (
                     int(method[-1])

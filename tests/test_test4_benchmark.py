@@ -3,7 +3,12 @@ import types
 
 sys.modules.setdefault("igraph", types.SimpleNamespace(Graph=object))
 
-from src.eval.test4_benchmark import build_suffix, remap_adjacency, select_graph_indices
+from src.eval.test4_benchmark import (
+    build_suffix,
+    remap_adjacency,
+    resolve_order_key,
+    select_graph_indices,
+)
 
 
 def test_concise_prompt_requests_answer_only():
@@ -39,3 +44,9 @@ def test_top_component_selection_fills_from_retrieval_when_component_is_small():
     scores = [0.9, 0.8, 0.7, 0.6]
 
     assert select_graph_indices(adjacency, scores, 3, "top_component") == [0, 1, 2]
+
+
+def test_sequential_can_use_the_matched_qafd_order():
+    assert resolve_order_key("sequential", "qafd_h1") == "qafd_h1"
+    assert resolve_order_key("sequential", "retrieval") == "sequential"
+    assert resolve_order_key("qafd_h1", "qafd_h0") == "qafd_h1"
