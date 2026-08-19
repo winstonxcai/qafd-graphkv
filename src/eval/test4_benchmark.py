@@ -155,33 +155,37 @@ class PassageGraph:
             if graph.vs[v.index]["name"].startswith("entity-")
         }
 
-    def _bounded(self, source: int, target: int) -> bool:
-        start = [n for n in self.graph.neighbors(source) if self.graph.vs[n]["name"].startswith("entity-")]
-        target_entities = set(
-            n for n in self.graph.neighbors(target) if self.graph.vs[n]["name"].startswith("entity-")
-        )
-        if set(start) & target_entities:
-            return True
-        frontier = set(start)
+    def _passage_entities(self, passage: int) -> set[int]:
+        return {
+            node
+            for node in self.graph.neighbors(passage)
+            if self.graph.vs[node]["name"].startswith("entity-")
+        }
+
+    def _reachable_entities(self, source: int) -> set[int]:
+        frontier = self._passage_entities(source)
         visited = set(frontier)
         for _ in range(self.max_hops):
             next_frontier = set()
             for entity in frontier:
                 next_frontier.update(self.entity_neighbors.get(entity, []))
             next_frontier -= visited
-            if next_frontier & target_entities:
-                return True
             visited.update(next_frontier)
             frontier = next_frontier
             if not frontier:
                 break
-        return False
+        return visited
+
+    def _bounded(self, source: int, target: int) -> bool:
+        return bool(self._reachable_entities(source) & self._passage_entities(target))
 
     def adjacency(self, vertices: list[int]) -> list[set[int]]:
         adjacency = {i: set() for i in range(len(vertices))}
+        reachable = [self._reachable_entities(vertex) for vertex in vertices]
+        passage_entities = [self._passage_entities(vertex) for vertex in vertices]
         for i in range(len(vertices)):
             for j in range(i + 1, len(vertices)):
-                if self._bounded(vertices[i], vertices[j]):
+                if reachable[i] & passage_entities[j]:
                     adjacency[i].add(j)
                     adjacency[j].add(i)
         return [adjacency[i] for i in range(len(vertices))]
