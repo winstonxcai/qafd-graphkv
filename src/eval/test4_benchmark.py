@@ -285,6 +285,7 @@ def main() -> None:
     parser.add_argument("--pool-k", type=int)
     parser.add_argument("--context-k", type=int)
     parser.add_argument("--k", type=int, default=15)
+    parser.add_argument("--start", type=int, default=0)
     parser.add_argument("--limit", type=int, default=50)
     parser.add_argument("--matched-prompt", action="store_true")
     parser.add_argument("--max-new-tokens", type=int)
@@ -298,7 +299,15 @@ def main() -> None:
     if args.sequential_order != "retrieval" and args.method != "sequential":
         parser.error("--sequential-order is only valid with --method sequential")
 
-    results = json.loads(Path(args.results).read_text())["per_query"][: args.limit]
+    if args.start < 0:
+        parser.error("--start must be non-negative")
+    all_results = json.loads(Path(args.results).read_text())["per_query"]
+    results = all_results[args.start : args.start + args.limit]
+    if len(results) != args.limit:
+        parser.error(
+            f"requested questions [{args.start}, {args.start + args.limit}) "
+            f"but only {len(all_results)} retrieval results are available"
+        )
     questions = json.loads(Path(args.questions).read_text())
     answers = {q["question"]: [q["answer"]] for q in questions}
     graph = ig.Graph.Read_Pickle(args.graph)
@@ -333,7 +342,8 @@ def main() -> None:
     totals = {method: {"em": 0.0, "f1": 0.0, "seconds": 0.0} for method in methods}
 
     try:
-        for qid, item in enumerate(results):
+        for offset, item in enumerate(results):
+            qid = args.start + offset
             pool_k = args.pool_k or args.k
             docs = item["docs"][:pool_k]
             scores = (item.get("doc_scores") or [float(pool_k - i) for i in range(pool_k)])[:pool_k]

@@ -14,6 +14,7 @@ ROOT=/mnt/beegfs/home/Winston/qafd-graphkv
 GRAPHKV_PY=/mnt/beegfs/home/Winston/miniconda3/envs/graphkv/bin/python
 QAFD_PY=/mnt/beegfs/home/Winston/miniconda3/envs/qafd-rag/bin/python
 PORT=${PORT:-8791}
+START=${START:-0}
 OUT_ROOT=${OUT_ROOT:-$ROOT/artifacts/results/test4_250_winner_matched_methods}
 OUT_DIR=$OUT_ROOT/$METHOD
 
@@ -40,4 +41,5 @@ PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.test4_benchmark \
   --questions third_party/QAFD-RAG/data/multihop/hotpotqa.json \
   --graph third_party/QAFD-RAG/kg/multihop/gpt-4o-mini_nvidia-nv-embed-v2_hotpotqa/graph.pickle \
   --output-dir "$OUT_DIR" --port "$PORT" --recursive-port "$PORT" \
-  --k 20 --limit 250 --method "$METHOD" --matched-prompt --max-new-tokens 256
+  --k 20 --start "$START" --limit 250 --method "$METHOD" \
+  --matched-prompt --max-new-tokens 256
