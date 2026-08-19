@@ -899,6 +899,13 @@ winning QAFD+GraphKV sparse-fill run is also reported with its exact selected-
 star control; it is labeled separately because that method-specific pipeline
 uses a four-passage graph star rather than the full top-20 context.
 
+An untouched holdout validation on QIDs 250–499 is documented in
+[`artifacts/results/test4_holdout_250_baselines.md`](artifacts/results/test4_holdout_250_baselines.md)
+with machine-readable results in
+[`artifacts/results/test4_holdout_250_baselines.csv`](artifacts/results/test4_holdout_250_baselines.csv).
+This holdout includes Sequential, Block-RAG, Original Graph-KV, Original QAFD
+(h≤1 ordering), and the locked winning pipeline with its exact control.
+
 ---
 
 # 11. A800 strategy for intermittent availability

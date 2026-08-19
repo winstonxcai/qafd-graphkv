@@ -1,0 +1,7 @@
+method,context_operation,questions,qid_start,qid_end,k,prompt_style,max_new_tokens,em,f1,avg_latency_seconds,source
+Sequential,full top-20,250,250,499,20,concise,256,0.756,0.11981816253630606,2.0596122037023306,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_holdout_250_baselines/sequential/summary.json
+Block-RAG,full top-20,250,250,499,20,concise,256,0.68,0.09849114558220005,2.9524986838018523,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_holdout_250_baselines/block_rag/summary.json
+Original Graph-KV,full top-20,250,250,499,20,concise,256,0.72,0.11008561033745182,3.0779523997232316,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_holdout_250_baselines/graphkv_original/summary.json
+Original QAFD h<=1 ordering,full top-20,250,250,499,20,concise,256,0.756,0.11285798066372418,3.164688040789217,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_holdout_250_baselines/qafd_h1/summary.json
+Winner exact Sequential control,selected four-passage stars,250,250,499,20,concise,256,0.648,0.5001774146763991,0.49755263804551214,/mnt/beegfs/home/Winston/qafd_holdout_winner/sequential/summary.json
+QAFD+GraphKV sparse-fill winner,h<=0 center plus h<=2 fill and checkpoint,250,250,499,20,concise,256,0.64,0.5291093081806794,0.7039232658715918,/mnt/beegfs/home/Winston/qafd_holdout_winner/qafd_graphkv/summary.json
