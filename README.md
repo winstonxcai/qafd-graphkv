@@ -887,17 +887,17 @@ comparison below.
 
 ## Complete Test 4 comparison: 250 questions
 
-The complete all-method comparison is recorded in
+The corrected matched all-method comparison is recorded in
 [`artifacts/results/test4_all_methods_comparison.md`](artifacts/results/test4_all_methods_comparison.md)
 and the machine-readable results are in
 [`artifacts/results/test4_all_methods_comparison.csv`](artifacts/results/test4_all_methods_comparison.csv).
 
-The canonical k=15/default-prompt table includes Sequential, Block-RAG,
-Original Graph-KV, QAFD h≤0/h≤1/h≤2, fixed recursive `T=2`, and adaptive
-recursive `T=min(D,3)`. Sequential is strongest under that shared Test 4
-configuration. The separate winning QAFD+GraphKV sparse-fill run is also
-reported with its matched Sequential baseline, but uses k=20 and concise
-prompting, so it is not directly rank-comparable with the canonical table.
+The matched k=20/concise/256-token table reruns Sequential, Block-RAG, Original
+Graph-KV, QAFD h≤0/h≤1/h≤2, fixed recursive `T=2`, and adaptive recursive
+`T=min(D,3)` under the winner's model and decoding environment. The separate
+winning QAFD+GraphKV sparse-fill run is also reported with its exact selected-
+star control; it is labeled separately because that method-specific pipeline
+uses a four-passage graph star rather than the full top-20 context.
 
 ---
 

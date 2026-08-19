@@ -1,58 +1,52 @@
-# Test 4 — all-method comparison on 250 questions
+# Test 4 — matched all-method comparison on 250 questions
 
-The canonical table uses the same 250 fixed HotpotQA questions and the same
-top-15 QAFD passages for every method. It uses the original Test 4 default
-prompt and the GraphKV server configuration used by the existing 250-question
-run. Recursive rows use the project recursive endpoint with 128 generated
-tokens; the other GraphKV rows use the official server endpoint.
+This table is the corrected comparison. Every method uses the same 250 fixed
+HotpotQA questions, the same QAFD retrieval results, the same retrieval pool
+(`k=20`), Tulu3-Block-FT, concise answer-only prompt, greedy decoding, BF16
+FlashAttention2, and a 256-token generation cap. The methods differ only in
+how they consume or order the retrieved passages and caches.
 
 | Method | EM | F1 | Avg latency |
 |---|---:|---:|---:|
-| Sequential | 0.732 | 0.109042 | 2.062 s |
-| Block-RAG | 0.640 | 0.090980 | 5.513 s |
-| Original Graph-KV | 0.664 | 0.089655 | 2.877 s |
-| QAFD ordering, h≤0 | 0.692 | 0.092156 | 2.707 s |
-| QAFD ordering, h≤1 | 0.684 | 0.092888 | 2.598 s |
-| QAFD ordering, h≤2 | 0.684 | 0.091143 | 2.711 s |
-| Recursive QAFD-GraphKV, T=2 | 0.192 | 0.056391 | 2.993 s |
-| Adaptive recursive QAFD-GraphKV, T=min(D,3) | 0.204 | 0.057100 | 4.132 s |
+| Sequential, full top-20 | 0.728 | 0.114041 | 1.878 s |
+| Block-RAG, full top-20 | 0.640 | 0.091590 | 2.626 s |
+| Original Graph-KV, full top-20 | 0.648 | 0.101775 | 3.145 s |
+| QAFD ordering, h≤0 | 0.680 | 0.099437 | 3.152 s |
+| QAFD ordering, h≤1 | **0.700** | 0.104190 | 3.113 s |
+| QAFD ordering, h≤2 | 0.672 | 0.102493 | 3.056 s |
+| Recursive QAFD-GraphKV, h≤1, T=2 | 0.176 | 0.056818 | 3.563 s |
+| Adaptive recursive QAFD-GraphKV, h≤1, T=min(D,3) | 0.200 | 0.061052 | 4.592 s |
 
-Under this canonical configuration, Sequential is the strongest baseline by
-both EM and F1. The recursive implementations are currently substantially
-behind the non-recursive methods, so they should not be presented as the
-winning result.
+Under this strictly matched environment, QAFD h≤1 has the best EM among the
+full-top-20 comparison methods, while Sequential has the best F1. Both
+recursive variants remain substantially behind the non-recursive methods.
 
-## Separately matched winning experiment
+## Winning sparse-fill pipeline
 
-The winning unified QAFD+GraphKV pipeline was intentionally tuned under a
-different contract: retrieval pool 20, concise answer-only prompting, a
-query-conditioned h≤0 center, h≤2 sparse-fill to four passages, and the
-latent integration checkpoint. Its matched Sequential comparison is included
-below, but these rows must not be ranked as if they were the same
-configuration as the canonical table.
+The winning QAFD+GraphKV sparse-fill pipeline is included for completeness.
+It uses the same model, questions, k=20 retrieval pool, concise prompt, and
+256-token cap, but its method-specific operation selects a query-conditioned
+h≤0 center, fills sparse stars from h≤2 connectivity to four neighbors, and
+adds the graph-integration checkpoint. Its exact within-pipeline matched
+control is therefore reported separately rather than conflated with the
+full-top-20 Sequential row above.
 
-| Method | k | EM | F1 | Avg latency |
-|---|---:|---:|---:|---:|
-| Sequential, winner-matched | 20 | 0.592 | 0.480889 | 0.501 s |
-| QAFD+GraphKV sparse-fill winner | 20 | 0.592 | **0.535732** | 0.656 s |
+| Method | Context operation | EM | F1 | Avg latency |
+|---|---|---:|---:|---:|
+| Sequential, winner-pipeline control | identical selected four-passage stars | 0.592 | 0.480889 | 0.501 s |
+| QAFD+GraphKV sparse-fill winner | h≤0 center + h≤2 sparse fill + checkpoint | 0.592 | **0.535732** | 0.656 s |
 
-The winning pipeline improves F1 by `+0.054842` over its matched Sequential
-baseline on the same 250 questions. The exact reproducible experiment is
-recorded in `artifacts/results/qafd_graphkv_f1_experiments.md`.
+The winner improves F1 by `+0.054842` over its exact within-pipeline control.
+That result is a separate structural comparison because the control receives
+the winner’s selected four-passage star rather than the full top-20 context.
 
-## Raw artifact locations
+## Matched-run artifacts
 
-Canonical rows:
-
-```text
-/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/
-```
-
-Adaptive row:
+The fresh per-method JSONL and summaries are on the GPU server at:
 
 ```text
-/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_all_methods/qafd_adaptive_recursive_h1/
+/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_winner_matched_methods/
 ```
 
-The machine-readable version of this table is
+The machine-readable summary is
 `artifacts/results/test4_all_methods_comparison.csv`.
