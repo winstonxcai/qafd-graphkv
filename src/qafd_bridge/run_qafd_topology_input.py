@@ -33,6 +33,7 @@ def main():
     args = parser.parse_args()
 
     root = os.path.abspath(args.qafd_root)
+    os.chdir(root)
     sys.path.insert(0, root)
     for package in ["src", "src.retrievers", "src.passage_entity", "src.utils"]:
         module = types.ModuleType(package)
