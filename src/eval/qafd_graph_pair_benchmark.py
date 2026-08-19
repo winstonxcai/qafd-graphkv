@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 from pathlib import Path
 
@@ -18,11 +19,32 @@ from src.eval.test4_benchmark import (
 )
 
 
+QUESTION_STOPWORDS = {
+    "a", "an", "and", "are", "as", "at", "be", "by", "did", "do",
+    "does", "for", "from", "has", "have", "how", "in", "is", "it",
+    "of", "on", "or", "that", "the", "to", "was", "were", "what",
+    "when", "where", "which", "who", "whose", "why", "with",
+}
+
+
+def query_overlap(question: str, passage: str) -> int:
+    """Count content-word overlap without consulting answers or gold passages."""
+    question_terms = {
+        term
+        for term in re.findall(r"[a-z0-9]+", question.lower())
+        if term not in QUESTION_STOPWORDS
+    }
+    passage_terms = set(re.findall(r"[a-z0-9]+", passage.lower()))
+    return len(question_terms & passage_terms)
+
+
 def choose_center_and_neighbors(
     adjacency: list[set[int]],
     scores: list[float],
     center_rule: str,
     max_neighbors: int,
+    passages: list[str] | None = None,
+    question: str | None = None,
 ) -> tuple[int, list[int]]:
     if len(scores) < 2:
         raise ValueError("Graph-specific generation requires at least two passages")
@@ -35,7 +57,7 @@ def choose_center_and_neighbors(
         for j in neighbors
         if i < j
     ]
-    if center_rule == "best_edge" and edges:
+    if center_rule in {"best_edge", "bridge_target"} and edges:
         first, second = max(
             edges,
             key=lambda edge: (
@@ -44,7 +66,21 @@ def choose_center_and_neighbors(
                 -min(edge),
             ),
         )
-        center = first if scores[first] >= scores[second] else second
+        if center_rule == "bridge_target":
+            if passages is None or question is None:
+                raise ValueError(
+                    "bridge_target requires the question and passage texts"
+                )
+            first_key = (query_overlap(question, passages[first]), scores[first], -first)
+            second_key = (
+                query_overlap(question, passages[second]), scores[second], -second
+            )
+            # The endpoint with less direct query overlap is more likely to be
+            # the second-hop target. It becomes the passage that attends to all
+            # neighbor caches in GraphKV's directed center/neighbor operation.
+            center = first if first_key < second_key else second
+        else:
+            center = first if scores[first] >= scores[second] else second
         required_neighbor = second if center == first else first
     elif center_rule == "weighted_degree":
         center = max(
@@ -102,7 +138,7 @@ def main() -> None:
     parser.add_argument("--hops", type=int, choices=[0, 1, 2], default=0)
     parser.add_argument(
         "--center-rule",
-        choices=["best_edge", "weighted_degree", "top_seed"],
+        choices=["best_edge", "bridge_target", "weighted_degree", "top_seed"],
         default="best_edge",
     )
     parser.add_argument("--max-neighbors", type=int, default=4)
@@ -146,7 +182,12 @@ def main() -> None:
                 raise ValueError(f"QID {qid} has passages missing from the graph")
             adjacency = passage_graph.adjacency(vertices)
             center_index, neighbor_indices = choose_center_and_neighbors(
-                adjacency, scores, args.center_rule, args.max_neighbors
+                adjacency,
+                scores,
+                args.center_rule,
+                args.max_neighbors,
+                passages=docs,
+                question=item["question"],
             )
             formatted = []
             for doc in docs:

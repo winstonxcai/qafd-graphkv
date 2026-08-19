@@ -1,9 +1,14 @@
 import sys
 import types
 
+import pytest
+
 sys.modules.setdefault("igraph", types.SimpleNamespace(Graph=object))
 
-from src.eval.qafd_graph_pair_benchmark import choose_center_and_neighbors
+from src.eval.qafd_graph_pair_benchmark import (
+    choose_center_and_neighbors,
+    query_overlap,
+)
 
 
 def test_best_edge_uses_highest_scoring_endpoint_as_center():
@@ -25,3 +30,35 @@ def test_isolated_center_falls_back_without_dropping_question():
 
     assert center == 0
     assert neighbors == [1]
+
+
+def test_query_overlap_ignores_question_stopwords():
+    assert query_overlap("Who was born in Paris?", "The artist was born in Paris.") == 2
+
+
+def test_bridge_target_directs_edge_away_from_question_facing_passage():
+    adjacency = [{1}, {0, 2}, {1}]
+    scores = [0.9, 0.8, 0.7]
+    passages = [
+        "Alice founded Acme Industries.",
+        "Acme Industries employed Bob Smith.",
+        "An unrelated passage.",
+    ]
+    center, neighbors = choose_center_and_neighbors(
+        adjacency,
+        scores,
+        "bridge_target",
+        max_neighbors=2,
+        passages=passages,
+        question="Who founded Acme Industries?",
+    )
+
+    assert center == 1
+    assert neighbors == [0, 2]
+
+
+def test_bridge_target_requires_query_inputs():
+    with pytest.raises(ValueError, match="requires the question"):
+        choose_center_and_neighbors(
+            [{1}, {0}], [0.9, 0.8], "bridge_target", max_neighbors=1
+        )
