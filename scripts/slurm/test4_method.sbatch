@@ -62,6 +62,9 @@ EXTRA_ARGS=(--prompt-style "$PROMPT_STYLE")
 if [[ -n "${STRATEGY_NAME:-}" ]]; then
   EXTRA_ARGS+=(--strategy-name "$STRATEGY_NAME")
 fi
+if [[ "${INCLUDE_GRAPH_LINKS:-0}" == "1" ]]; then
+  EXTRA_ARGS+=(--include-graph-links)
+fi
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.test4_benchmark \
   --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
   --questions third_party/QAFD-RAG/data/multihop/hotpotqa.json \

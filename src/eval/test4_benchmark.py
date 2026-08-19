@@ -66,6 +66,15 @@ def build_suffix(question: str, style: str) -> str:
     return f"{instruction} \n Question: {question} \n<|assistant|>\n"
 
 
+def remap_adjacency(adjacency: list[set[int]], old_order: list[int]) -> list[set[int]]:
+    """Remap adjacency indices after passages move from old to new order."""
+    old_to_new = {old: new for new, old in enumerate(old_order)}
+    return [
+        {old_to_new[neighbor] for neighbor in adjacency[old]}
+        for old in old_order
+    ]
+
+
 class PassageGraph:
     def __init__(self, graph: ig.Graph, max_hops: int):
         self.graph = graph
@@ -154,6 +163,7 @@ def main() -> None:
         choices=["default", "concise", "multihop"],
         default="default",
     )
+    parser.add_argument("--include-graph-links", action="store_true")
     parser.add_argument("--k", type=int, default=15)
     parser.add_argument("--limit", type=int, default=50)
     args = parser.parse_args()
@@ -210,9 +220,16 @@ def main() -> None:
                 "graphkv_original": base_docs,
             }
             vertex_orders = {}
+            order_indices = {}
+            adjacency_by_h = {}
+            original_index = {vertex: index for index, vertex in enumerate(vertices)}
             for h in (0, 1, 2):
                 vertex_order = graph_cache[h].order(vertices)
                 vertex_orders[h] = vertex_order
+                order_indices[h] = [original_index[vertex] for vertex in vertex_order]
+                adjacency_by_h[h] = remap_adjacency(
+                    graph_cache[h].adjacency(vertices), order_indices[h]
+                )
                 by_vertex = {vertex: doc for vertex, doc in zip(vertices, documents)}
                 orders[f"qafd_h{h}"] = [by_vertex[vertex] for vertex in vertex_order]
             if args.include_recursive or args.method == "qafd_recursive_h1_t2":
@@ -221,18 +238,28 @@ def main() -> None:
             # PassageGraph.adjacency returns indices in retrieval order. The
             # recursive endpoint receives passages in QAFD h<=1 order, so
             # remap every edge into that same order before propagation.
-            original_h1_adjacency = graph_cache[1].adjacency(vertices)
-            original_index = {vertex: index for index, vertex in enumerate(vertices)}
-            h1_order = [original_index[vertex] for vertex in vertex_orders[1]]
-            old_to_new = {old: new for new, old in enumerate(h1_order)}
-            h1_adjacency = [
-                {old_to_new[neighbor] for neighbor in original_h1_adjacency[old]}
-                for old in h1_order
-            ]
+            h1_adjacency = adjacency_by_h[1]
 
             for method in methods:
                 ordered_docs = orders[method]
-                contexts = [f"- Title: {d['title']}\n{d['text']}\n" for d in ordered_docs]
+                contexts = []
+                graph_h = (
+                    int(method[-1])
+                    if args.include_graph_links and method in {"qafd_h0", "qafd_h1", "qafd_h2"}
+                    else None
+                )
+                for index, document in enumerate(ordered_docs):
+                    link_note = ""
+                    if graph_h is not None:
+                        linked_titles = [
+                            ordered_docs[neighbor]["title"]
+                            for neighbor in sorted(adjacency_by_h[graph_h][index])
+                        ]
+                        links = "; ".join(linked_titles) if linked_titles else "none"
+                        link_note = f"QAFD-linked passages: {links}\n"
+                    contexts.append(
+                        f"- Title: {document['title']}\n{link_note}{document['text']}\n"
+                    )
                 blocks = [prefix, ""] + contexts + [suffix]
                 if method == "sequential":
                     endpoint = f"http://127.0.0.1:{args.port}/generate_vanilla"
