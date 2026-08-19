@@ -881,9 +881,23 @@ The raw per-method JSONL files and summary are stored on the GPU server at:
 /mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_50_k15_block/
 ```
 
-The full recursive QAFD-GraphKV comparison, including `T=2` propagation and
-adaptive `T=min(D,3)`, remains a follow-up experiment. This run therefore
-validates graph-informed ordering, not the complete recursive method.
+The 50-question run above validated graph-informed ordering only. The full
+recursive comparison was subsequently run on 250 questions; see the complete
+comparison below.
+
+## Complete Test 4 comparison: 250 questions
+
+The complete all-method comparison is recorded in
+[`artifacts/results/test4_all_methods_comparison.md`](artifacts/results/test4_all_methods_comparison.md)
+and the machine-readable results are in
+[`artifacts/results/test4_all_methods_comparison.csv`](artifacts/results/test4_all_methods_comparison.csv).
+
+The canonical k=15/default-prompt table includes Sequential, Block-RAG,
+Original Graph-KV, QAFD h≤0/h≤1/h≤2, fixed recursive `T=2`, and adaptive
+recursive `T=min(D,3)`. Sequential is strongest under that shared Test 4
+configuration. The separate winning QAFD+GraphKV sparse-fill run is also
+reported with its matched Sequential baseline, but uses k=20 and concise
+prompting, so it is not directly rank-comparable with the canonical table.
 
 ---
 

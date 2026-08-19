@@ -1,0 +1,11 @@
+method,topology,rounds,questions,k,prompt_style,em,f1,avg_latency_seconds,comparison_scope,source
+Sequential,full sequence,-,250,15,default,0.732,0.10904208877130685,2.061916261281818,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/sequential/summary.json
+Block-RAG,block retrieval,-,250,15,default,0.64,0.09097966647935805,5.512595840567723,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/block_rag/summary.json
+Original Graph-KV,original heuristic,1,250,15,default,0.664,0.08965489638158465,2.877132673495449,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/graphkv_original/summary.json
+QAFD ordering h<=0,QAFD h<=0 ordering,1,250,15,default,0.692,0.09215619208731639,2.706526890043169,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/qafd_h0/summary.json
+QAFD ordering h<=1,QAFD h<=1 ordering,1,250,15,default,0.684,0.09288823125791074,2.597659612145275,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/qafd_h1/summary.json
+QAFD ordering h<=2,QAFD h<=2 ordering,1,250,15,default,0.684,0.09114290619104053,2.7111128770411015,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/qafd_h2/summary.json
+Recursive QAFD-GraphKV,QAFD h<=1 ordering,2,250,15,default,0.192,0.05639080693072482,2.9933031780086456,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_parallel_rerun/qafd_recursive_h1_t2/summary.json
+Adaptive recursive QAFD-GraphKV,QAFD h<=1 ordering,min(D,3),250,15,default,0.204,0.0571002248125572,4.132113183096052,canonical Test 4,/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/test4_250_k15_all_methods/qafd_adaptive_recursive_h1/summary.json
+Sequential (winner-matched),full sequence,-,250,20,concise,0.592,0.48088932804881057,0.5011023585,paired winning experiment,artifacts/results/qafd_graphkv_f1_search/attempt_08_sparsefill_h0_h2_n4_checkpoint
+QAFD+GraphKV sparse-fill winner,h<=0 center plus h<=2 sparse fill,1,250,20,concise,0.592,0.5357315404186466,0.6563956910,paired winning experiment,artifacts/results/qafd_graphkv_f1_search/attempt_08_sparsefill_h0_h2_n4_checkpoint
