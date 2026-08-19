@@ -209,3 +209,59 @@ The checkpoint strengthened the positive signal: QAFD+GraphKV reached 0.516881 F
 ### Next Experiment
 
 Preserve this query-focus and checkpoint architecture, keep the h=0 center and direct neighbors, and fill only stars with fewer than four neighbors using the highest-QAFD-score h<=1 neighbors. Matched Sequential receives the identical expanded stars.
+
+## Attempt 8 — checkpoint_sparsefill_h0_h2_n4
+
+**Timestamp:** 2026-08-19T11:30:10+08:00  
+**Hypothesis:** The checkpoint architecture is strongest with four linked cache regions; selectively filling only sparse h=0 stars from bounded h<=2 connectivity should extend that gain without globally introducing the noisy h<=2 graph.  
+**Changes:** Preserved dense h=0 stars exactly. For stars below four neighbors, added highest-QAFD-score nodes connected to the same center within h<=2 until the four-neighbor cap. Both methods receive identical selected passages and prompt text.  
+**Matched Sequential configuration:** Fresh Sequential run with identical h=0 center, direct and fallback neighbors, ordering, query-focus text, latent checkpoint, Tulu3-Block-FT model, concise final prompt, greedy 256-token cap, BF16 FlashAttention2, and A800 hardware.  
+**Important hyperparameters:** pool_k=20; base_h=0; fill_h<=2 only when sparse; center_rule=best_edge; min_neighbors=4; max_neighbors=4; max_stars=1; center_query_focus=true; center_integration_checkpoint=true; prompt_style=concise; limit=250; greedy; max_new_tokens=256.  
+
+### Results
+
+| Method | EM | F1 | Avg Latency |
+|---|---:|---:|---:|
+| Sequential | 0.592000 | 0.480889 | 0.501102 s |
+| QAFD + GraphKV | 0.592000 | 0.535732 | 0.656396 s |
+
+**Delta EM:** +0.000000  
+**Delta F1:** +0.054842  
+**Latency ratio:** 1.309903x  
+**Outcome:** success; validate with a reproducibility run.  
+
+### Interpretation
+
+The topology-adaptive cache budget met the target: QAFD+GraphKV F1 was 0.535732 versus 0.480889 Sequential, a +0.054842 gain, with tied 0.592 EM and a 1.310 latency ratio. This is one deterministic graph/cache pipeline and one final prediction per question. The result is provisional until an exact fresh rerun reproduces the margin.
+
+### Next Experiment
+
+Rerun this exact Sequential and QAFD+GraphKV pair from scratch on the same QIDs 0..249 and audit raw alignment, summaries, and the +0.05 F1 threshold.
+
+## Attempt 9 — repro_checkpoint_sparsefill_h0_h2_n4
+
+**Timestamp:** 2026-08-19T11:34:15+08:00  
+**Hypothesis:** If the qualifying gain is deterministic and not a cache or evaluation artifact, a fresh exact rerun will reproduce every prediction and retain at least +0.05 F1 over its fresh matched Sequential control.  
+**Changes:** No method or hyperparameter changes from Attempt 8. Used new output directories, new model-server processes, and fresh Sequential and QAFD+GraphKV inference over QIDs 0..249.  
+**Matched Sequential configuration:** Exact Attempt 8 configuration: identical selected passage structures within the pair, Tulu3-Block-FT, BF16 FlashAttention2, A800, concise prompt, greedy decoding, and 256-token cap.  
+**Important hyperparameters:** pool_k=20; base_h=0; sparse_fill_h<=2; center_rule=best_edge; min_neighbors=4; max_neighbors=4; max_stars=1; center_query_focus=true; center_integration_checkpoint=true; prompt_style=concise; limit=250; greedy; max_new_tokens=256.  
+
+### Results
+
+| Method | EM | F1 | Avg Latency |
+|---|---:|---:|---:|
+| Sequential | 0.592000 | 0.480889 | 0.502857 s |
+| QAFD + GraphKV | 0.592000 | 0.535732 | 0.657702 s |
+
+**Delta EM:** +0.000000  
+**Delta F1:** +0.054842  
+**Latency ratio:** 1.307932x  
+**Outcome:** success; independently reproduced.  
+
+### Interpretation
+
+The validation reproduced all 250 predictions, scores, and selected graph structures exactly for both methods. Sequential F1 remained 0.480889 and QAFD+GraphKV F1 remained 0.535732, preserving the +0.054842 qualifying margin; only measured request timing varied slightly.
+
+### Next Experiment
+
+Target achieved and independently rerun. Preserve the winner, raw predictions, paired logs, and exact configuration; no further optimization is required for this objective.
