@@ -65,6 +65,13 @@ fi
 if [[ "${INCLUDE_GRAPH_LINKS:-0}" == "1" ]]; then
   EXTRA_ARGS+=(--include-graph-links)
 fi
+if [[ "${GRAPH_SELECTION:-none}" != "none" ]]; then
+  EXTRA_ARGS+=(
+    --graph-selection "$GRAPH_SELECTION"
+    --pool-k "${POOL_K:-20}"
+    --context-k "${CONTEXT_K:?Set CONTEXT_K for graph selection}"
+  )
+fi
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.test4_benchmark \
   --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
   --questions third_party/QAFD-RAG/data/multihop/hotpotqa.json \

@@ -75,6 +75,70 @@ def remap_adjacency(adjacency: list[set[int]], old_order: list[int]) -> list[set
     ]
 
 
+def select_graph_indices(
+    adjacency: list[set[int]],
+    scores: list[float],
+    limit: int,
+    rule: str,
+) -> list[int]:
+    """Select a compact graph-supported context from a larger retrieval pool."""
+    if limit < 1:
+        raise ValueError("Graph context limit must be positive")
+    limit = min(limit, len(scores))
+    score_order = sorted(range(len(scores)), key=lambda i: (-scores[i], i))
+    selected: list[int] = []
+
+    if rule == "best_edge":
+        edges = [
+            (i, j)
+            for i, neighbors in enumerate(adjacency)
+            for j in neighbors
+            if i < j
+        ]
+        if edges:
+            first, second = max(
+                edges,
+                key=lambda edge: (
+                    scores[edge[0]] + scores[edge[1]],
+                    max(scores[edge[0]], scores[edge[1]]),
+                    -min(edge),
+                ),
+            )
+            supported = {first, second} | adjacency[first] | adjacency[second]
+            selected.extend(i for i in score_order if i in supported)
+    elif rule == "top_component":
+        components = []
+        unseen = set(range(len(scores)))
+        while unseen:
+            root = min(unseen)
+            component = set()
+            frontier = [root]
+            unseen.remove(root)
+            while frontier:
+                node = frontier.pop()
+                component.add(node)
+                for neighbor in adjacency[node]:
+                    if neighbor in unseen:
+                        unseen.remove(neighbor)
+                        frontier.append(neighbor)
+            components.append(component)
+        best_component = max(
+            components,
+            key=lambda component: (
+                sum(sorted((scores[i] for i in component), reverse=True)[:2]),
+                max(scores[i] for i in component),
+                -min(component),
+            ),
+        )
+        selected.extend(i for i in score_order if i in best_component)
+    else:
+        raise ValueError(f"Unknown graph selection rule: {rule}")
+
+    selected_set = set(selected)
+    selected.extend(i for i in score_order if i not in selected_set)
+    return selected[:limit]
+
+
 class PassageGraph:
     def __init__(self, graph: ig.Graph, max_hops: int):
         self.graph = graph
@@ -164,11 +228,22 @@ def main() -> None:
         default="default",
     )
     parser.add_argument("--include-graph-links", action="store_true")
+    parser.add_argument(
+        "--graph-selection",
+        choices=["none", "best_edge", "top_component"],
+        default="none",
+    )
+    parser.add_argument("--pool-k", type=int)
+    parser.add_argument("--context-k", type=int)
     parser.add_argument("--k", type=int, default=15)
     parser.add_argument("--limit", type=int, default=50)
     args = parser.parse_args()
     if args.strategy_name and not args.method:
         parser.error("--strategy-name requires a single --method")
+    if args.graph_selection != "none" and args.method not in {"qafd_h0", "qafd_h1", "qafd_h2"}:
+        parser.error("graph selection requires one of the QAFD ordering methods")
+    if args.graph_selection != "none" and not args.context_k:
+        parser.error("graph selection requires --context-k")
 
     results = json.loads(Path(args.results).read_text())["per_query"][: args.limit]
     questions = json.loads(Path(args.questions).read_text())
@@ -200,8 +275,9 @@ def main() -> None:
 
     try:
         for qid, item in enumerate(results):
-            docs = item["docs"][: args.k]
-            scores = item.get("doc_scores") or [float(args.k - i) for i in range(args.k)]
+            pool_k = args.pool_k or args.k
+            docs = item["docs"][:pool_k]
+            scores = (item.get("doc_scores") or [float(pool_k - i) for i in range(pool_k)])[:pool_k]
             documents = []
             vertices = []
             for doc, score in zip(docs, scores):
@@ -210,6 +286,18 @@ def main() -> None:
                 vertices.append(content_to_vertex.get(doc))
             if any(vertex is None for vertex in vertices):
                 raise ValueError(f"qid={qid} has passages missing from graph")
+
+            if args.graph_selection != "none":
+                graph_h = int(args.method[-1])
+                pool_adjacency = graph_cache[graph_h].adjacency(vertices)
+                selected = select_graph_indices(
+                    pool_adjacency,
+                    scores,
+                    args.context_k,
+                    args.graph_selection,
+                )
+                documents = [documents[index] for index in selected]
+                vertices = [vertices[index] for index in selected]
 
             question = item["question"]
             suffix = build_suffix(question, args.prompt_style)
