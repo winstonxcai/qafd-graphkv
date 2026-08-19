@@ -4,3 +4,11 @@ current_time,attempt_number,strategy_name,short_strategy_description,EM,F1,avg_l
 2026-08-18T23:03:26+08:00,2,qafd_h1_graphkv,"QAFD h<=1 component ordering of top-15 passages followed by GraphKV gapemp",0.684000,0.092888,2.597660
 2026-08-18T23:03:53+08:00,3,qafd_h2_graphkv,"QAFD h<=2 component ordering of top-15 passages followed by GraphKV gapemp",0.684000,0.091143,2.711113
 2026-08-18T23:05:04+08:00,4,qafd_h1_t2_recursive_graphkv,"QAFD h<=1 ordering plus two rounds of neighbor KV propagation before generation",0.192000,0.056391,2.993303
+2026-08-19T09:31:52+08:00,5,qafd_h0_k3,QAFD h<=0 ordering of the top-3 retrieved passages followed by GraphKV gapemp,0.676000,0.086491,2.284109
+2026-08-19T09:31:52+08:00,6,qafd_h0_k5,QAFD h<=0 ordering of the top-5 retrieved passages followed by GraphKV gapemp,0.680000,0.090020,2.297495
+2026-08-19T09:31:52+08:00,7,qafd_h0_k8,QAFD h<=0 ordering of the top-8 retrieved passages followed by GraphKV gapemp,0.712000,0.093001,2.321299
+2026-08-19T09:31:52+08:00,8,qafd_h0_k10,QAFD h<=0 ordering of the top-10 retrieved passages followed by GraphKV gapemp,0.692000,0.088409,2.451696
+2026-08-19T09:31:52+08:00,9,qafd_h1_k3,QAFD h<=1 ordering of the top-3 retrieved passages followed by GraphKV gapemp,0.676000,0.086840,2.303784
+2026-08-19T09:31:52+08:00,10,qafd_h1_k5,QAFD h<=1 ordering of the top-5 retrieved passages followed by GraphKV gapemp,0.684000,0.089143,2.327345
+2026-08-19T09:31:52+08:00,11,qafd_h1_k8,QAFD h<=1 ordering of the top-8 retrieved passages followed by GraphKV gapemp,0.712000,0.093407,2.322360
+2026-08-19T09:31:52+08:00,12,qafd_h1_k10,QAFD h<=1 ordering of the top-10 retrieved passages followed by GraphKV gapemp,0.688000,0.089292,2.375846

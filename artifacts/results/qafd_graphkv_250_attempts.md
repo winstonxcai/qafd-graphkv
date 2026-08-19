@@ -59,3 +59,67 @@ implementation.
 - Delta from sequential: `-0.540` EM.
 - Outcome: operationally stable but semantically incorrect; do not scale this cache formulation without fixing its positional semantics.
 
+
+### Attempt 5 — qafd_h0_k3
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=0 ordering of the top-3 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.676000` (169/250), F1 `0.086491`, average latency `2.284109 s`.
+- Delta from sequential: `-0.056000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 6 — qafd_h0_k5
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=0 ordering of the top-5 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.680000` (170/250), F1 `0.090020`, average latency `2.297495 s`.
+- Delta from sequential: `-0.052000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 7 — qafd_h0_k8
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=0 ordering of the top-8 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.712000` (178/250), F1 `0.093001`, average latency `2.321299 s`.
+- Delta from sequential: `-0.020000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 8 — qafd_h0_k10
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=0 ordering of the top-10 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.692000` (173/250), F1 `0.088409`, average latency `2.451696 s`.
+- Delta from sequential: `-0.040000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 9 — qafd_h1_k3
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=1 ordering of the top-3 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.676000` (169/250), F1 `0.086840`, average latency `2.303784 s`.
+- Delta from sequential: `-0.056000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 10 — qafd_h1_k5
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=1 ordering of the top-5 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.684000` (171/250), F1 `0.089143`, average latency `2.327345 s`.
+- Delta from sequential: `-0.048000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 11 — qafd_h1_k8
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=1 ordering of the top-8 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.712000` (178/250), F1 `0.093407`, average latency `2.322360 s`.
+- Delta from sequential: `-0.020000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 12 — qafd_h1_k10
+
+- Completed: 2026-08-19T09:31:52+08:00
+- Strategy: QAFD h<=1 ordering of the top-10 retrieved passages followed by GraphKV gapemp
+- Result: EM `0.688000` (172/250), F1 `0.089292`, average latency `2.375846 s`.
+- Delta from sequential: `-0.044000` EM.
+- Outcome: target not met; continue experimentation.
