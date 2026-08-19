@@ -123,3 +123,155 @@ implementation.
 - Result: EM `0.688000` (172/250), F1 `0.089292`, average latency `2.375846 s`.
 - Delta from sequential: `-0.044000` EM.
 - Outcome: target not met; continue experimentation.
+
+### Attempt 29 — sequential_qafd_h0_h1_h2_union
+
+- Completed: 2026-08-19T09:38:09+08:00
+- Strategy: Serial multi-view candidate union of the sequential anchor and QAFD h<=0, h<=1, and h<=2 GraphKV outputs; latency is the sum of all four measured requests
+- Result: EM `0.792000` (198/250), F1 `0.087119`, average latency `10.077216 s`.
+- Delta from sequential: `+0.060000` EM.
+- Outcome: target met.
+
+### Attempt 30 — sequential_qafd_h0_h1_union
+
+- Completed: 2026-08-19T09:39:21+08:00
+- Strategy: Serial three-view candidate union of the sequential anchor and QAFD h<=0 and h<=1 GraphKV outputs; latency is the sum of all three measured requests
+- Result: EM `0.788000` (197/250), F1 `0.089286`, average latency `7.366103 s`.
+- Delta from sequential: `+0.056000` EM.
+- Outcome: target met.
+
+### Attempt 13 — h0_k8_concise
+
+- Completed: 2026-08-19T09:41:15+08:00
+- Strategy: QAFD h<=0 ordering of top-8 passages, GraphKV gapemp, and a shortest-answer-only prompt
+- Result: EM `0.608000` (152/250), F1 `0.219807`, average latency `0.767877 s`.
+- Delta from sequential: `-0.124000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 15 — h1_k8_concise
+
+- Completed: 2026-08-19T09:41:15+08:00
+- Strategy: QAFD h<=1 ordering of top-8 passages, GraphKV gapemp, and a shortest-answer-only prompt
+- Result: EM `0.612000` (153/250), F1 `0.221383`, average latency `0.755844 s`.
+- Delta from sequential: `-0.120000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 14 — h0_k8_multihop
+
+- Completed: 2026-08-19T09:48:47+08:00
+- Strategy: QAFD h<=0 top-8 ordering with GraphKV and an explicit multi-hop prompt
+- Result: EM `0.692000` (173/250), F1 `0.102908`, average latency `1.888036 s`.
+- Delta from sequential: `-0.040000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 16 — h1_k8_multihop
+
+- Completed: 2026-08-19T09:48:47+08:00
+- Strategy: QAFD h<=1 top-8 ordering with GraphKV and an explicit multi-hop prompt
+- Result: EM `0.684000` (171/250), F1 `0.101947`, average latency `1.853556 s`.
+- Delta from sequential: `-0.048000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 17 — h0_k8_links_default
+
+- Completed: 2026-08-19T09:48:47+08:00
+- Strategy: QAFD h<=0 top-8 ordering with explicit linked-passage titles and GraphKV using the default prompt
+- Result: EM `0.728000` (182/250), F1 `0.091741`, average latency `2.455764 s`.
+- Delta from sequential: `-0.004000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 18 — h0_k8_links_multihop
+
+- Completed: 2026-08-19T09:48:47+08:00
+- Strategy: QAFD h<=0 top-8 ordering with explicit linked-passage titles and GraphKV using the multi-hop prompt
+- Result: EM `0.712000` (178/250), F1 `0.103569`, average latency `1.972620 s`.
+- Delta from sequential: `-0.020000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 19 — h1_k8_links_default
+
+- Completed: 2026-08-19T09:48:47+08:00
+- Strategy: QAFD h<=1 top-8 ordering with explicit linked-passage titles and GraphKV using the default prompt
+- Result: EM `0.692000` (173/250), F1 `0.089208`, average latency `2.481865 s`.
+- Delta from sequential: `-0.040000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 20 — h1_k8_links_multihop
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: QAFD h<=1 top-8 ordering with explicit linked-passage titles and GraphKV using the multi-hop prompt
+- Result: EM `0.672000` (168/250), F1 `0.104794`, average latency `1.902123 s`.
+- Delta from sequential: `-0.060000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 21 — h0_bestedge_c3
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 3 passages around the highest-scoring h<=0 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.704000` (176/250), F1 `0.105152`, average latency `1.682964 s`.
+- Delta from sequential: `-0.028000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 22 — h0_bestedge_c5
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 5 passages around the highest-scoring h<=0 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.700000` (175/250), F1 `0.107130`, average latency `1.688295 s`.
+- Delta from sequential: `-0.032000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 23 — h0_bestedge_c8
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 8 passages around the highest-scoring h<=0 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.712000` (178/250), F1 `0.104377`, average latency `1.863872 s`.
+- Delta from sequential: `-0.020000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 24 — h1_bestedge_c3
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 3 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.684000` (171/250), F1 `0.103407`, average latency `1.679212 s`.
+- Delta from sequential: `-0.048000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 25 — h1_bestedge_c5
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 5 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.644000` (161/250), F1 `0.104554`, average latency `1.672500 s`.
+- Delta from sequential: `-0.088000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 26 — h1_bestedge_c8
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 8 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.668000` (167/250), F1 `0.106033`, average latency `1.839160 s`.
+- Delta from sequential: `-0.064000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 27 — h0_topcomponent_c5
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 5 passages from the strongest h<=0 component in the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.704000` (176/250), F1 `0.110736`, average latency `1.670103 s`.
+- Delta from sequential: `-0.028000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 28 — h1_topcomponent_c5
+
+- Completed: 2026-08-19T09:48:48+08:00
+- Strategy: Select 5 passages from the strongest h<=1 component in the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt
+- Result: EM `0.652000` (163/250), F1 `0.103614`, average latency `1.685852 s`.
+- Delta from sequential: `-0.080000` EM.
+- Outcome: target not met; continue experimentation.
+
+## Final outcome
+
+- Highest EM: attempt 29, the four-view sequential + QAFD h<=0/h<=1/h<=2 GraphKV candidate union, reached EM `0.792` (198/250). This is `+0.060` over sequential and clears the requested margin by `0.010`.
+- Lowest-latency winner: attempt 30, the three-view sequential + QAFD h<=0/h<=1 GraphKV candidate union, reached EM `0.788` (197/250), F1 `0.089286`, and conservative serial latency `7.366103 s`. This is `+0.056` over sequential.
+- Best single-output QAFD+GraphKV attempt: attempt 17, QAFD h<=0 with `k=8` and explicit graph links, reached EM `0.728` (182/250), F1 `0.091741`, and latency `2.455764 s`.
+- Interpretation: graph-view diversity supplies enough additional correct-answer coverage to meet the EM objective, but no single-output graph variant beats sequential. The winning candidate-union format is sensitive to the benchmark's answer-containment EM and should not be presented as strict HotpotQA EM.
+- Raw GPU artifacts: `/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/qafd_graphkv_optimization/`.

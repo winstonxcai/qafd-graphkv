@@ -12,3 +12,21 @@ current_time,attempt_number,strategy_name,short_strategy_description,EM,F1,avg_l
 2026-08-19T09:31:52+08:00,10,qafd_h1_k5,QAFD h<=1 ordering of the top-5 retrieved passages followed by GraphKV gapemp,0.684000,0.089143,2.327345
 2026-08-19T09:31:52+08:00,11,qafd_h1_k8,QAFD h<=1 ordering of the top-8 retrieved passages followed by GraphKV gapemp,0.712000,0.093407,2.322360
 2026-08-19T09:31:52+08:00,12,qafd_h1_k10,QAFD h<=1 ordering of the top-10 retrieved passages followed by GraphKV gapemp,0.688000,0.089292,2.375846
+2026-08-19T09:38:09+08:00,29,sequential_qafd_h0_h1_h2_union,"Serial multi-view candidate union of the sequential anchor and QAFD h<=0, h<=1, and h<=2 GraphKV outputs; latency is the sum of all four measured requests",0.792000,0.087119,10.077216
+2026-08-19T09:39:21+08:00,30,sequential_qafd_h0_h1_union,Serial three-view candidate union of the sequential anchor and QAFD h<=0 and h<=1 GraphKV outputs; latency is the sum of all three measured requests,0.788000,0.089286,7.366103
+2026-08-19T09:41:15+08:00,13,h0_k8_concise,"QAFD h<=0 ordering of top-8 passages, GraphKV gapemp, and a shortest-answer-only prompt",0.608000,0.219807,0.767877
+2026-08-19T09:41:15+08:00,15,h1_k8_concise,"QAFD h<=1 ordering of top-8 passages, GraphKV gapemp, and a shortest-answer-only prompt",0.612000,0.221383,0.755844
+2026-08-19T09:48:47+08:00,14,h0_k8_multihop,QAFD h<=0 top-8 ordering with GraphKV and an explicit multi-hop prompt,0.692000,0.102908,1.888036
+2026-08-19T09:48:47+08:00,16,h1_k8_multihop,QAFD h<=1 top-8 ordering with GraphKV and an explicit multi-hop prompt,0.684000,0.101947,1.853556
+2026-08-19T09:48:47+08:00,17,h0_k8_links_default,QAFD h<=0 top-8 ordering with explicit linked-passage titles and GraphKV using the default prompt,0.728000,0.091741,2.455764
+2026-08-19T09:48:47+08:00,18,h0_k8_links_multihop,QAFD h<=0 top-8 ordering with explicit linked-passage titles and GraphKV using the multi-hop prompt,0.712000,0.103569,1.972620
+2026-08-19T09:48:47+08:00,19,h1_k8_links_default,QAFD h<=1 top-8 ordering with explicit linked-passage titles and GraphKV using the default prompt,0.692000,0.089208,2.481865
+2026-08-19T09:48:48+08:00,20,h1_k8_links_multihop,QAFD h<=1 top-8 ordering with explicit linked-passage titles and GraphKV using the multi-hop prompt,0.672000,0.104794,1.902123
+2026-08-19T09:48:48+08:00,21,h0_bestedge_c3,"Select 3 passages around the highest-scoring h<=0 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.704000,0.105152,1.682964
+2026-08-19T09:48:48+08:00,22,h0_bestedge_c5,"Select 5 passages around the highest-scoring h<=0 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.700000,0.107130,1.688295
+2026-08-19T09:48:48+08:00,23,h0_bestedge_c8,"Select 8 passages around the highest-scoring h<=0 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.712000,0.104377,1.863872
+2026-08-19T09:48:48+08:00,24,h1_bestedge_c3,"Select 3 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.684000,0.103407,1.679212
+2026-08-19T09:48:48+08:00,25,h1_bestedge_c5,"Select 5 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.644000,0.104554,1.672500
+2026-08-19T09:48:48+08:00,26,h1_bestedge_c8,"Select 8 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.668000,0.106033,1.839160
+2026-08-19T09:48:48+08:00,27,h0_topcomponent_c5,"Select 5 passages from the strongest h<=0 component in the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.704000,0.110736,1.670103
+2026-08-19T09:48:48+08:00,28,h1_topcomponent_c5,"Select 5 passages from the strongest h<=1 component in the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.652000,0.103614,1.685852

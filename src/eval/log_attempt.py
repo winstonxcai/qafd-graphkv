@@ -72,7 +72,7 @@ def main() -> None:
 
     write_header = not args.csv.exists() or args.csv.stat().st_size == 0
     with args.csv.open("a", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=CSV_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=CSV_COLUMNS, lineterminator="\n")
         if write_header:
             writer.writeheader()
         writer.writerow(csv_row)
