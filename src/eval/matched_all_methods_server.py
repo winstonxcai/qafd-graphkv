@@ -57,10 +57,10 @@ def limited_gapemp(tokenizer, model, emb, prefix, middle, query, contexts):
 
         context_outputs = model(context_ids.to(model.device), use_cache=True)
         context_pkv = apply_pkv_rerotary_position_embeddings(context_outputs.past_key_values, emb)
+        context_pkv = flatten_pkv(context_pkv, context_mask.reshape(-1))
         context_clone = type(context_pkv)()
         context_clone.key_cache = [tensor.clone().detach() for tensor in context_pkv.key_cache]
         context_clone.value_cache = [tensor.clone().detach() for tensor in context_pkv.value_cache]
-        context_pkv = flatten_pkv(context_pkv, context_mask.reshape(-1))
         context_pkv = apply_pkv_rotary_position_embeddings(context_pkv, emb)
         context_pkv = stack_pkv(context_pkv, batch_size)
 
