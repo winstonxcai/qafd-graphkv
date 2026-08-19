@@ -15,17 +15,33 @@ GRAPHKV_ROOT = os.path.abspath(
     os.path.join(os.path.dirname(__file__), "..", "..", "third_party", "GraphKV")
 )
 sys.path.insert(0, GRAPHKV_ROOT)
-from pcw_parallel import gapemp_graph  # noqa: E402
+from pcw_parallel import gapemp_graph, gapemp_graph_batch  # noqa: E402
 
 
 app = Flask(__name__)
 CENTER_INSTRUCTION = (
     "\nNow you will read the center paper and answer a related question: \n"
 )
+BATCH_CENTER_INSTRUCTION = (
+    "\nNow you will read the center paper and answer a related question: : \n"
+)
 
 
 def sequential_prompt(prefix: str, center: str, neighbors: list[str], query: str) -> str:
     return prefix + "".join(neighbors) + CENTER_INSTRUCTION + center + query
+
+
+def sequential_batch_prompt(
+    prefix: str,
+    centers: list[str],
+    neighbor_groups: list[list[str]],
+    query: str,
+) -> str:
+    stars = "".join(
+        "".join(neighbors) + BATCH_CENTER_INSTRUCTION + center
+        for center, neighbors in zip(centers, neighbor_groups, strict=True)
+    )
+    return prefix + stars + query
 
 
 def main() -> None:
@@ -67,11 +83,56 @@ def main() -> None:
         )
         return {"ret": 0, "generated": generated, "message": ""}
 
+    @app.post("/generate_qafd_graphkv_batch")
+    def generate_qafd_graphkv_batch():
+        form = request.get_json()
+        generated = gapemp_graph_batch(
+            tokenizer,
+            model,
+            emb,
+            form["prefix"],
+            form["centers"],
+            form["neighbor_groups"],
+            form["query"],
+            args.model,
+            1,
+            1,
+            None,
+        )
+        return {"ret": 0, "generated": generated, "message": ""}
+
     @app.post("/generate_matched_sequential")
     def generate_matched_sequential():
         form = request.get_json()
         prompt = sequential_prompt(
             form["prefix"], form["center"], form["neighbors"], form["query"]
+        )
+        input_ids = tokenizer(
+            prompt, truncation=False, return_tensors="pt", add_special_tokens=False
+        ).input_ids.to(model.device)
+        context_length = input_ids.shape[-1]
+        with torch.inference_mode():
+            response = model.generate(
+                input_ids=input_ids,
+                max_new_tokens=256,
+                num_beams=1,
+                do_sample=False,
+                temperature=1.0,
+                eos_token_id=tokenizer.eos_token_id,
+            )[0]
+        generated = tokenizer.decode(
+            response[context_length:], skip_special_tokens=True
+        )
+        return {"ret": 0, "generated": generated, "message": ""}
+
+    @app.post("/generate_matched_sequential_batch")
+    def generate_matched_sequential_batch():
+        form = request.get_json()
+        prompt = sequential_batch_prompt(
+            form["prefix"],
+            form["centers"],
+            form["neighbor_groups"],
+            form["query"],
         )
         input_ids = tokenizer(
             prompt, truncation=False, return_tensors="pt", add_special_tokens=False

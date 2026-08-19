@@ -97,3 +97,31 @@ Increasing graph fan-in degraded both methods and widened the deficit: QAFD+Grap
 ### Next Experiment
 
 Change the graph direction rather than fan-in: choose the likely bridge-target endpoint as center using query-to-passage lexical overlap, with the question-facing endpoint as its neighbor, and rerun a matched 250-question pair.
+
+## Attempt 4 — graph_specific_bridge_target_h0_n4
+
+**Timestamp:** 2026-08-19T11:01:36+08:00  
+**Hypothesis:** Making the likely second-hop answer passage the GraphKV center should let it integrate the question-facing bridge passage and improve over the identical flat Sequential order.  
+**Changes:** Added answer-independent content-word query overlap to orient the strongest QAFD edge. The lower-overlap endpoint becomes center, with retrieval score and index as deterministic tie-breakers.  
+**Matched Sequential configuration:** Fresh Sequential run with the identical bridge-target center, neighbor passages and order, Tulu3-Block-FT model, concise prompt, greedy 256-token cap, BF16 FlashAttention2, and A800 hardware.  
+**Important hyperparameters:** pool_k=20; h=0; center_rule=bridge_target; max_neighbors=4; prompt_style=concise; limit=250; greedy; max_new_tokens=256.  
+
+### Results
+
+| Method | EM | F1 | Avg Latency |
+|---|---:|---:|---:|
+| Sequential | 0.588000 | 0.478807 | 0.449320 s |
+| QAFD + GraphKV | 0.592000 | 0.434540 | 0.738978 s |
+
+**Delta EM:** +0.004000  
+**Delta F1:** -0.044267  
+**Latency ratio:** 1.644661x  
+**Outcome:** target not met.  
+
+### Interpretation
+
+The query-directed orientation changed most stars but reduced both methods and left QAFD+GraphKV 0.044267 F1 behind. Lower lexical overlap is not a reliable enough proxy for the answer-bearing endpoint, so a single directed star remains brittle.
+
+### Next Experiment
+
+Represent multiple QAFD components inside one GraphKV inference: select the best directed star from each of the two highest-scoring connected components and merge their caches once, while matched Sequential receives the same grouped passages.

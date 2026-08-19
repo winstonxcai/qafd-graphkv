@@ -21,6 +21,7 @@ POOL_K=${POOL_K:-20}
 HOPS=${HOPS:-0}
 CENTER_RULE=${CENTER_RULE:-best_edge}
 MAX_NEIGHBORS=${MAX_NEIGHBORS:-4}
+MAX_STARS=${MAX_STARS:-1}
 PROMPT_STYLE=${PROMPT_STYLE:-concise}
 LIMIT=${LIMIT:-250}
 
@@ -58,5 +59,6 @@ PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
   --hops "$HOPS" \
   --center-rule "$CENTER_RULE" \
   --max-neighbors "$MAX_NEIGHBORS" \
+  --max-stars "$MAX_STARS" \
   --prompt-style "$PROMPT_STYLE" \
   --limit "$LIMIT"

@@ -7,6 +7,7 @@ sys.modules.setdefault("igraph", types.SimpleNamespace(Graph=object))
 
 from src.eval.qafd_graph_pair_benchmark import (
     choose_center_and_neighbors,
+    choose_component_stars,
     query_overlap,
 )
 
@@ -62,3 +63,22 @@ def test_bridge_target_requires_query_inputs():
         choose_center_and_neighbors(
             [{1}, {0}], [0.9, 0.8], "bridge_target", max_neighbors=1
         )
+
+
+def test_component_stars_keep_highest_scoring_components_separate():
+    adjacency = [{1, 2}, {0}, {0}, {4}, {3}, set()]
+    scores = [0.9, 0.8, 0.7, 0.95, 0.6, 0.99]
+
+    stars = choose_component_stars(
+        adjacency, scores, max_stars=2, max_neighbors=2
+    )
+
+    assert stars == [(0, [1, 2]), (3, [4])]
+
+
+def test_component_stars_fall_back_without_graph_edges():
+    stars = choose_component_stars(
+        [set(), set(), set()], [0.9, 0.8, 0.7], max_stars=2, max_neighbors=1
+    )
+
+    assert stars == [(0, [1])]

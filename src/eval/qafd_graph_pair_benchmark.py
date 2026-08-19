@@ -118,6 +118,82 @@ def choose_center_and_neighbors(
     return center, neighbors[:max_neighbors]
 
 
+def connected_components(adjacency: list[set[int]]) -> list[set[int]]:
+    components = []
+    unseen = set(range(len(adjacency)))
+    while unseen:
+        root = min(unseen)
+        component = {root}
+        frontier = [root]
+        unseen.remove(root)
+        while frontier:
+            node = frontier.pop()
+            for neighbor in adjacency[node]:
+                if neighbor in unseen:
+                    unseen.remove(neighbor)
+                    component.add(neighbor)
+                    frontier.append(neighbor)
+        components.append(component)
+    return components
+
+
+def choose_component_stars(
+    adjacency: list[set[int]],
+    scores: list[float],
+    max_stars: int,
+    max_neighbors: int,
+) -> list[tuple[int, list[int]]]:
+    """Choose one high-scoring directed star from each of the best components."""
+    if max_stars < 1:
+        raise ValueError("max_stars must be positive")
+    candidates = []
+    for component in connected_components(adjacency):
+        edges = [
+            (left, right)
+            for left in component
+            for right in adjacency[left]
+            if left < right and right in component
+        ]
+        if not edges:
+            continue
+        first, second = max(
+            edges,
+            key=lambda edge: (
+                scores[edge[0]] + scores[edge[1]],
+                max(scores[edge[0]], scores[edge[1]]),
+                -min(edge),
+            ),
+        )
+        center = first if scores[first] >= scores[second] else second
+        required_neighbor = second if center == first else first
+        neighbors = [required_neighbor]
+        neighbors.extend(
+            node
+            for node in sorted(
+                adjacency[center], key=lambda node: (-scores[node], node)
+            )
+            if node != required_neighbor
+        )
+        candidates.append(
+            (
+                scores[first] + scores[second],
+                max(scores[first], scores[second]),
+                -min(component),
+                center,
+                neighbors[:max_neighbors],
+            )
+        )
+    candidates.sort(reverse=True)
+    stars = [(center, neighbors) for _, _, _, center, neighbors in candidates[:max_stars]]
+    if stars:
+        return stars
+    return [
+        choose_center_and_neighbors(
+            adjacency, scores, "top_seed", max_neighbors=max_neighbors
+        )
+    ]
+
+
 def request_generation(url: str, payload: dict) -> tuple[str, float]:
     start = time.perf_counter()
     response = requests.post(url, json=payload, timeout=1800)
@@ -142,6 +218,7 @@ def main() -> None:
         default="best_edge",
     )
     parser.add_argument("--max-neighbors", type=int, default=4)
+    parser.add_argument("--max-stars", type=int, default=1)
     parser.add_argument(
         "--prompt-style",
         choices=["default", "concise", "multihop"],
@@ -164,11 +241,14 @@ def main() -> None:
         "<|user|>\nYou are an intelligent AI assistant. Answer questions "
         "using only the reference documents.\n\n"
     )
-    endpoint = (
-        f"http://127.0.0.1:{args.port}/generate_matched_sequential"
+    endpoint_name = (
+        "generate_matched_sequential"
         if args.method == "sequential"
-        else f"http://127.0.0.1:{args.port}/generate_qafd_graphkv"
+        else "generate_qafd_graphkv"
     )
+    if args.max_stars > 1:
+        endpoint_name += "_batch"
+    endpoint = f"http://127.0.0.1:{args.port}/{endpoint_name}"
     args.output_dir.mkdir(parents=True, exist_ok=True)
     output_path = args.output_dir / f"{args.strategy_name}.jsonl"
     totals = {"em": 0.0, "f1": 0.0, "seconds": 0.0}
@@ -181,25 +261,51 @@ def main() -> None:
             if any(vertex is None for vertex in vertices):
                 raise ValueError(f"QID {qid} has passages missing from the graph")
             adjacency = passage_graph.adjacency(vertices)
-            center_index, neighbor_indices = choose_center_and_neighbors(
-                adjacency,
-                scores,
-                args.center_rule,
-                args.max_neighbors,
-                passages=docs,
-                question=item["question"],
-            )
             formatted = []
             for doc in docs:
                 title, body = parse_passage(doc)
                 formatted.append(f"- Title: {title}\n{body}\n")
             question = item["question"]
+            if args.max_stars > 1:
+                stars = choose_component_stars(
+                    adjacency, scores, args.max_stars, args.max_neighbors
+                )
+            else:
+                stars = [
+                    choose_center_and_neighbors(
+                        adjacency,
+                        scores,
+                        args.center_rule,
+                        args.max_neighbors,
+                        passages=docs,
+                        question=item["question"],
+                    )
+                ]
+            center_indices = [center for center, _ in stars]
+            neighbor_index_groups = [neighbors for _, neighbors in stars]
             payload = {
                 "prefix": prefix,
-                "center": formatted[center_index],
-                "neighbors": [formatted[index] for index in neighbor_indices],
                 "query": build_suffix(question, args.prompt_style),
             }
+            if args.max_stars > 1:
+                payload.update(
+                    {
+                        "centers": [formatted[index] for index in center_indices],
+                        "neighbor_groups": [
+                            [formatted[index] for index in neighbors]
+                            for neighbors in neighbor_index_groups
+                        ],
+                    }
+                )
+            else:
+                payload.update(
+                    {
+                        "center": formatted[center_indices[0]],
+                        "neighbors": [
+                            formatted[index] for index in neighbor_index_groups[0]
+                        ],
+                    }
+                )
             generated, seconds = request_generation(endpoint, payload)
             em, f1 = score_prediction(generated, answers[question])
             totals["em"] += em
@@ -215,8 +321,10 @@ def main() -> None:
                         "em": em,
                         "f1": f1,
                         "seconds": seconds,
-                        "center_index": center_index,
-                        "neighbor_indices": neighbor_indices,
+                        "center_index": center_indices[0],
+                        "neighbor_indices": neighbor_index_groups[0],
+                        "center_indices": center_indices,
+                        "neighbor_index_groups": neighbor_index_groups,
                     }
                 )
                 + "\n"
