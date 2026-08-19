@@ -1,0 +1,200 @@
+"""Benchmark one graph-specific QAFD+GraphKV method or its matched control."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import time
+from pathlib import Path
+
+import igraph as ig
+import requests
+
+from src.eval.test4_benchmark import (
+    PassageGraph,
+    build_suffix,
+    parse_passage,
+    score_prediction,
+)
+
+
+def choose_center_and_neighbors(
+    adjacency: list[set[int]],
+    scores: list[float],
+    center_rule: str,
+    max_neighbors: int,
+) -> tuple[int, list[int]]:
+    if len(scores) < 2:
+        raise ValueError("Graph-specific generation requires at least two passages")
+    if max_neighbors < 1:
+        raise ValueError("max_neighbors must be positive")
+
+    edges = [
+        (i, j)
+        for i, neighbors in enumerate(adjacency)
+        for j in neighbors
+        if i < j
+    ]
+    if center_rule == "best_edge" and edges:
+        first, second = max(
+            edges,
+            key=lambda edge: (
+                scores[edge[0]] + scores[edge[1]],
+                max(scores[edge[0]], scores[edge[1]]),
+                -min(edge),
+            ),
+        )
+        center = first if scores[first] >= scores[second] else second
+        required_neighbor = second if center == first else first
+    elif center_rule == "weighted_degree":
+        center = max(
+            range(len(scores)),
+            key=lambda node: (
+                sum(scores[n] for n in adjacency[node]),
+                len(adjacency[node]),
+                scores[node],
+                -node,
+            ),
+        )
+        required_neighbor = None
+    elif center_rule == "top_seed":
+        center = max(range(len(scores)), key=lambda node: (scores[node], -node))
+        required_neighbor = None
+    else:
+        center = max(range(len(scores)), key=lambda node: (scores[node], -node))
+        required_neighbor = None
+
+    ranked_graph_neighbors = sorted(
+        adjacency[center], key=lambda node: (-scores[node], node)
+    )
+    neighbors = []
+    if required_neighbor is not None:
+        neighbors.append(required_neighbor)
+    neighbors.extend(n for n in ranked_graph_neighbors if n not in neighbors)
+
+    # GraphKV's graph path requires at least one neighbor. Preserve all 250
+    # questions by falling back to the strongest retrieved non-center passage.
+    if not neighbors:
+        neighbors = sorted(
+            (node for node in range(len(scores)) if node != center),
+            key=lambda node: (-scores[node], node),
+        )
+    return center, neighbors[:max_neighbors]
+
+
+def request_generation(url: str, payload: dict) -> tuple[str, float]:
+    start = time.perf_counter()
+    response = requests.post(url, json=payload, timeout=1800)
+    response.raise_for_status()
+    return response.json()["generated"], time.perf_counter() - start
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--results", required=True, type=Path)
+    parser.add_argument("--questions", required=True, type=Path)
+    parser.add_argument("--graph", required=True, type=Path)
+    parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--method", choices=["sequential", "qafd_graphkv"], required=True)
+    parser.add_argument("--strategy-name", required=True)
+    parser.add_argument("--port", type=int, required=True)
+    parser.add_argument("--pool-k", type=int, default=20)
+    parser.add_argument("--hops", type=int, choices=[0, 1, 2], default=0)
+    parser.add_argument(
+        "--center-rule",
+        choices=["best_edge", "weighted_degree", "top_seed"],
+        default="best_edge",
+    )
+    parser.add_argument("--max-neighbors", type=int, default=4)
+    parser.add_argument(
+        "--prompt-style",
+        choices=["default", "concise", "multihop"],
+        default="concise",
+    )
+    parser.add_argument("--limit", type=int, default=250)
+    args = parser.parse_args()
+
+    retrieval = json.loads(args.results.read_text())["per_query"][: args.limit]
+    question_rows = json.loads(args.questions.read_text())
+    answers = {row["question"]: [row["answer"]] for row in question_rows}
+    graph = ig.Graph.Read_Pickle(args.graph)
+    passage_graph = PassageGraph(graph, args.hops)
+    content_to_vertex = {
+        vertex["content"]: vertex.index
+        for vertex in graph.vs
+        if vertex["name"].startswith("chunk-") and vertex["content"]
+    }
+    prefix = (
+        "<|user|>\nYou are an intelligent AI assistant. Answer questions "
+        "using only the reference documents.\n\n"
+    )
+    endpoint = (
+        f"http://127.0.0.1:{args.port}/generate_matched_sequential"
+        if args.method == "sequential"
+        else f"http://127.0.0.1:{args.port}/generate_qafd_graphkv"
+    )
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = args.output_dir / f"{args.strategy_name}.jsonl"
+    totals = {"em": 0.0, "f1": 0.0, "seconds": 0.0}
+
+    with output_path.open("w") as handle:
+        for qid, item in enumerate(retrieval):
+            docs = item["docs"][: args.pool_k]
+            scores = (item.get("doc_scores") or [args.pool_k - i for i in range(args.pool_k)])[: args.pool_k]
+            vertices = [content_to_vertex.get(doc) for doc in docs]
+            if any(vertex is None for vertex in vertices):
+                raise ValueError(f"QID {qid} has passages missing from the graph")
+            adjacency = passage_graph.adjacency(vertices)
+            center_index, neighbor_indices = choose_center_and_neighbors(
+                adjacency, scores, args.center_rule, args.max_neighbors
+            )
+            formatted = []
+            for doc in docs:
+                title, body = parse_passage(doc)
+                formatted.append(f"- Title: {title}\n{body}\n")
+            question = item["question"]
+            payload = {
+                "prefix": prefix,
+                "center": formatted[center_index],
+                "neighbors": [formatted[index] for index in neighbor_indices],
+                "query": build_suffix(question, args.prompt_style),
+            }
+            generated, seconds = request_generation(endpoint, payload)
+            em, f1 = score_prediction(generated, answers[question])
+            totals["em"] += em
+            totals["f1"] += f1
+            totals["seconds"] += seconds
+            handle.write(
+                json.dumps(
+                    {
+                        "qid": qid,
+                        "question": question,
+                        "answers": answers[question],
+                        "generated": generated,
+                        "em": em,
+                        "f1": f1,
+                        "seconds": seconds,
+                        "center_index": center_index,
+                        "neighbor_indices": neighbor_indices,
+                    }
+                )
+                + "\n"
+            )
+            handle.flush()
+
+    summary = [
+        {
+            "method": args.strategy_name,
+            "questions": args.limit,
+            "em": totals["em"] / args.limit,
+            "f1": totals["f1"] / args.limit,
+            "avg_seconds": totals["seconds"] / args.limit,
+            "total_seconds": totals["seconds"],
+        }
+    ]
+    (args.output_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+    print(json.dumps(summary, indent=2))
+
+
+if __name__ == "__main__":
+    main()
