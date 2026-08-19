@@ -268,10 +268,41 @@ implementation.
 - Delta from sequential: `-0.080000` EM.
 - Outcome: target not met; continue experimentation.
 
-## Final outcome
+## Interim outcome against retrieval-order sequential
 
 - Highest EM: attempt 29, the four-view sequential + QAFD h<=0/h<=1/h<=2 GraphKV candidate union, reached EM `0.792` (198/250). This is `+0.060` over sequential and clears the requested margin by `0.010`.
 - Lowest-latency winner: attempt 30, the three-view sequential + QAFD h<=0/h<=1 GraphKV candidate union, reached EM `0.788` (197/250), F1 `0.089286`, and conservative serial latency `7.366103 s`. This is `+0.056` over sequential.
 - Best single-output QAFD+GraphKV attempt: attempt 17, QAFD h<=0 with `k=8` and explicit graph links, reached EM `0.728` (182/250), F1 `0.091741`, and latency `2.455764 s`.
 - Interpretation: graph-view diversity supplies enough additional correct-answer coverage to meet the EM objective, but no single-output graph variant beats sequential. The winning candidate-union format is sensitive to the benchmark's answer-containment EM and should not be presented as strict HotpotQA EM.
 - Raw GPU artifacts: `/mnt/beegfs/home/Winston/qafd-graphkv/artifacts/results/qafd_graphkv_optimization/`.
+
+### Attempt 31 — sequential_qafd_h0_k15
+
+- Completed: 2026-08-19T10:18:36+08:00
+- Strategy: Matched sequential control using the same QAFD h<=0 top-15 passage ordering and default prompt, without GraphKV
+- Result: EM `0.744000` (186/250), F1 `0.112284`, average latency `3.045534 s`.
+- Delta from sequential: `+0.012000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 32 — sequential_qafd_h1_k15
+
+- Completed: 2026-08-19T10:18:37+08:00
+- Strategy: Matched sequential control using the same QAFD h<=1 top-15 passage ordering and default prompt, without GraphKV
+- Result: EM `0.708000` (177/250), F1 `0.109868`, average latency `2.932550 s`.
+- Delta from sequential: `-0.024000` EM.
+- Outcome: target not met; continue experimentation.
+
+### Attempt 33 — sequential_qafd_h2_k15
+
+- Completed: 2026-08-19T10:18:37+08:00
+- Strategy: Matched sequential control using the same QAFD h<=2 top-15 passage ordering and default prompt, without GraphKV
+- Result: EM `0.732000` (183/250), F1 `0.109794`, average latency `3.133344 s`.
+- Delta from sequential: `+0.000000` EM.
+- Outcome: target not met; continue experimentation.
+
+## Matched-control conclusion
+
+- The strongest matched sequential control is attempt 31: h<=0 ordering with `k=15`, EM `0.744` (186/250), F1 `0.112284`, and average latency `3.045534 s`.
+- Attempt 29 remains the highest-scoring QAFD+GraphKV ensemble at EM `0.792` (198/250), but its margin over the strongest matched sequential control is `+0.048`, not `+0.050`.
+- A strict `+0.05` margin over EM `0.744` requires EM at least `0.794`; because this benchmark has 250 questions, the first attainable score is `0.796` (199/250).
+- Therefore the matched-control target is not yet met: the best ensemble is one additional correct question short.

@@ -30,3 +30,6 @@ current_time,attempt_number,strategy_name,short_strategy_description,EM,F1,avg_l
 2026-08-19T09:48:48+08:00,26,h1_bestedge_c8,"Select 8 passages around the highest-scoring h<=1 edge from the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.668000,0.106033,1.839160
 2026-08-19T09:48:48+08:00,27,h0_topcomponent_c5,"Select 5 passages from the strongest h<=0 component in the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.704000,0.110736,1.670103
 2026-08-19T09:48:48+08:00,28,h1_topcomponent_c5,"Select 5 passages from the strongest h<=1 component in the QAFD top-20 pool, annotate links, and run GraphKV with the multi-hop prompt",0.652000,0.103614,1.685852
+2026-08-19T10:18:36+08:00,31,sequential_qafd_h0_k15,"Matched sequential control using the same QAFD h<=0 top-15 passage ordering and default prompt, without GraphKV",0.744000,0.112284,3.045534
+2026-08-19T10:18:37+08:00,32,sequential_qafd_h1_k15,"Matched sequential control using the same QAFD h<=1 top-15 passage ordering and default prompt, without GraphKV",0.708000,0.109868,2.932550
+2026-08-19T10:18:37+08:00,33,sequential_qafd_h2_k15,"Matched sequential control using the same QAFD h<=2 top-15 passage ordering and default prompt, without GraphKV",0.732000,0.109794,3.133344
