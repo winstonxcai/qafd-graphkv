@@ -1,1 +1,2 @@
 timestamp,attempt_number,strategy_name,strategy_description,sequential_em,sequential_f1,sequential_avg_latency,qafd_graphkv_em,qafd_graphkv_f1,qafd_graphkv_avg_latency,delta_em,delta_f1,latency_ratio
+2026-08-19T10:37:39+08:00,1,h0_k8_concise_gapemp,QAFD h<=0 orders the same top-8 passages; GraphKV uses official gapemp and both methods use the concise prompt,0.644000,0.527573,0.437426,0.608000,0.219807,0.818715,-0.036000,-0.307766,1.871666
