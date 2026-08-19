@@ -34,7 +34,7 @@ def main():
 
     root = os.path.abspath(args.qafd_root)
     sys.path.insert(0, root)
-    for package in ["src", "src.retrievers", "src.passage_entity"]:
+    for package in ["src", "src.retrievers", "src.passage_entity", "src.utils"]:
         module = types.ModuleType(package)
         module.__path__ = [os.path.join(root, *package.split("."))]
         module.__package__ = package
@@ -42,6 +42,11 @@ def main():
 
     src = os.path.join(root, "src")
     _load_module("src.retrievers.base", os.path.join(src, "retrievers", "base.py"))
+    utils_module = sys.modules["src.utils"]
+    logging_module = _load_module(
+        "src.utils.logging", os.path.join(src, "utils", "logging.py")
+    )
+    utils_module.logger = logging_module.logger
     _load_module(
         "src.retrievers.flow_diffusion",
         os.path.join(src, "retrievers", "flow_diffusion.py"),
