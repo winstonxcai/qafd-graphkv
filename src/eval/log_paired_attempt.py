@@ -11,6 +11,12 @@ from pathlib import Path
 
 EXPECTED_QUESTIONS = 250
 TARGET_DELTA_F1 = 0.05
+MATCHED_CONTEXT_FIELDS = (
+    "center_index",
+    "neighbor_indices",
+    "center_indices",
+    "neighbor_index_groups",
+)
 CSV_COLUMNS = [
     "timestamp",
     "attempt_number",
@@ -60,6 +66,23 @@ def validate_alignment(sequential: list[dict], qafd_graphkv: list[dict]) -> None
             raise ValueError(f"Question mismatch at QID {index}")
         if sequential_row["answers"] != qafd_row["answers"]:
             raise ValueError(f"Answer metadata mismatch at QID {index}")
+        for field in MATCHED_CONTEXT_FIELDS:
+            if sequential_row.get(field) != qafd_row.get(field):
+                raise ValueError(f"Context field {field} mismatch at QID {index}")
+
+
+def validate_summary(summary: dict, predictions: list[dict]) -> None:
+    expected = {
+        "em": sum(row["em"] for row in predictions) / EXPECTED_QUESTIONS,
+        "f1": sum(row["f1"] for row in predictions) / EXPECTED_QUESTIONS,
+        "avg_seconds": sum(row["seconds"] for row in predictions)
+        / EXPECTED_QUESTIONS,
+    }
+    for field, value in expected.items():
+        if abs(summary[field] - value) > 1e-9:
+            raise ValueError(
+                f"Summary {field}={summary[field]} does not match raw predictions {value}"
+            )
 
 
 def existing_attempts(path: Path) -> set[int]:
@@ -96,10 +119,11 @@ def main() -> None:
 
     sequential = read_summary(args.sequential_summary)
     qafd = read_summary(args.qafd_summary)
-    validate_alignment(
-        read_predictions(args.sequential_predictions),
-        read_predictions(args.qafd_predictions),
-    )
+    sequential_predictions = read_predictions(args.sequential_predictions)
+    qafd_predictions = read_predictions(args.qafd_predictions)
+    validate_alignment(sequential_predictions, qafd_predictions)
+    validate_summary(sequential, sequential_predictions)
+    validate_summary(qafd, qafd_predictions)
 
     timestamp = datetime.now().astimezone().isoformat(timespec="seconds")
     delta_em = qafd["em"] - sequential["em"]
