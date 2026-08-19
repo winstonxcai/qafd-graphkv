@@ -17,8 +17,8 @@ how they consume or order the retrieved passages and caches.
 | Recursive QAFD-GraphKV, h≤1, T=2 | 0.176 | 0.056818 | 3.563 s |
 | Adaptive recursive QAFD-GraphKV, h≤1, T=min(D,3) | 0.200 | 0.061052 | 4.592 s |
 
-Under this strictly matched environment, QAFD h≤1 has the best EM among the
-full-top-20 comparison methods, while Sequential has the best F1. Both
+Under this strictly matched environment, Sequential has the best EM and F1.
+QAFD h≤1 is the strongest QAFD ordering variant by both metrics. Both
 recursive variants remain substantially behind the non-recursive methods.
 
 ## Winning sparse-fill pipeline
