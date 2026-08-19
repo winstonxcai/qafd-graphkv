@@ -8,6 +8,7 @@ sys.modules.setdefault("igraph", types.SimpleNamespace(Graph=object))
 from src.eval.qafd_graph_pair_benchmark import (
     choose_center_and_neighbors,
     choose_component_stars,
+    fill_star_neighbors,
     query_overlap,
     query_conditioned_center,
 )
@@ -102,3 +103,29 @@ def test_component_stars_fall_back_without_graph_edges():
     )
 
     assert stars == [(0, [1])]
+
+
+def test_sparse_star_fills_from_wider_qafd_topology_by_score():
+    neighbors = fill_star_neighbors(
+        center=0,
+        neighbors=[1],
+        fill_adjacency=[{1, 2, 3, 4}, {0}, {0}, {0}, {0}],
+        scores=[1.0, 0.7, 0.9, 0.8, 0.6],
+        min_neighbors=4,
+        max_neighbors=4,
+    )
+
+    assert neighbors == [1, 2, 3, 4]
+
+
+def test_dense_star_is_not_reordered_by_fill_policy():
+    neighbors = fill_star_neighbors(
+        center=0,
+        neighbors=[3, 1, 2, 4],
+        fill_adjacency=[{1, 2, 3, 4}, {0}, {0}, {0}, {0}],
+        scores=[1.0, 0.7, 0.9, 0.8, 0.6],
+        min_neighbors=4,
+        max_neighbors=4,
+    )
+
+    assert neighbors == [3, 1, 2, 4]

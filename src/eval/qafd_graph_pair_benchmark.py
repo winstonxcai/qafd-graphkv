@@ -217,6 +217,35 @@ def choose_component_stars(
     ]
 
 
+def fill_star_neighbors(
+    center: int,
+    neighbors: list[int],
+    fill_adjacency: list[set[int]],
+    scores: list[float],
+    min_neighbors: int,
+    max_neighbors: int,
+) -> list[int]:
+    """Fill a sparse base-topology star from a wider QAFD topology."""
+    if min_neighbors < 1 or min_neighbors > max_neighbors:
+        raise ValueError("min_neighbors must be between one and max_neighbors")
+    result = list(neighbors[:max_neighbors])
+    if len(result) >= min_neighbors:
+        return result
+    candidates = sorted(
+        (
+            node
+            for node in fill_adjacency[center]
+            if node != center and node not in result
+        ),
+        key=lambda node: (-scores[node], node),
+    )
+    for node in candidates:
+        result.append(node)
+        if len(result) >= min_neighbors or len(result) >= max_neighbors:
+            break
+    return result
+
+
 def request_generation(url: str, payload: dict) -> tuple[str, float]:
     start = time.perf_counter()
     response = requests.post(url, json=payload, timeout=1800)
@@ -244,6 +273,8 @@ def main() -> None:
     parser.add_argument("--max-stars", type=int, default=1)
     parser.add_argument("--center-query-focus", action="store_true")
     parser.add_argument("--center-integration-checkpoint", action="store_true")
+    parser.add_argument("--min-neighbors", type=int, default=1)
+    parser.add_argument("--fill-hops", type=int, choices=[0, 1, 2])
     parser.add_argument(
         "--prompt-style",
         choices=["default", "concise", "multihop"],
@@ -253,12 +284,23 @@ def main() -> None:
     args = parser.parse_args()
     if args.center_integration_checkpoint and not args.center_query_focus:
         parser.error("center integration checkpoint requires center query focus")
+    if not 1 <= args.min_neighbors <= args.max_neighbors:
+        parser.error("min neighbors must be between one and max neighbors")
+    if args.min_neighbors > 1 and args.fill_hops is None:
+        parser.error("min neighbors greater than one requires fill hops")
+    if args.fill_hops is not None and args.fill_hops < args.hops:
+        parser.error("fill hops cannot be smaller than base hops")
 
     retrieval = json.loads(args.results.read_text())["per_query"][: args.limit]
     question_rows = json.loads(args.questions.read_text())
     answers = {row["question"]: [row["answer"]] for row in question_rows}
     graph = ig.Graph.Read_Pickle(args.graph)
     passage_graph = PassageGraph(graph, args.hops)
+    fill_passage_graph = (
+        PassageGraph(graph, args.fill_hops)
+        if args.fill_hops is not None and args.fill_hops != args.hops
+        else passage_graph
+    )
     content_to_vertex = {
         vertex["content"]: vertex.index
         for vertex in graph.vs
@@ -288,6 +330,11 @@ def main() -> None:
             if any(vertex is None for vertex in vertices):
                 raise ValueError(f"QID {qid} has passages missing from the graph")
             adjacency = passage_graph.adjacency(vertices)
+            fill_adjacency = (
+                fill_passage_graph.adjacency(vertices)
+                if args.min_neighbors > 1
+                else adjacency
+            )
             formatted = []
             for doc in docs:
                 title, body = parse_passage(doc)
@@ -307,6 +354,21 @@ def main() -> None:
                         passages=docs,
                         question=item["question"],
                     )
+                ]
+            if args.min_neighbors > 1:
+                stars = [
+                    (
+                        center,
+                        fill_star_neighbors(
+                            center,
+                            neighbors,
+                            fill_adjacency,
+                            scores,
+                            args.min_neighbors,
+                            args.max_neighbors,
+                        ),
+                    )
+                    for center, neighbors in stars
                 ]
             center_indices = [center for center, _ in stars]
             neighbor_index_groups = [neighbors for _, neighbors in stars]
@@ -365,6 +427,8 @@ def main() -> None:
                         "center_integration_checkpoint": (
                             args.center_integration_checkpoint
                         ),
+                        "min_neighbors": args.min_neighbors,
+                        "fill_hops": args.fill_hops,
                     }
                 )
                 + "\n"

@@ -24,6 +24,8 @@ MAX_NEIGHBORS=${MAX_NEIGHBORS:-4}
 MAX_STARS=${MAX_STARS:-1}
 CENTER_QUERY_FOCUS=${CENTER_QUERY_FOCUS:-0}
 CENTER_INTEGRATION_CHECKPOINT=${CENTER_INTEGRATION_CHECKPOINT:-0}
+MIN_NEIGHBORS=${MIN_NEIGHBORS:-1}
+FILL_HOPS=${FILL_HOPS:-}
 PROMPT_STYLE=${PROMPT_STYLE:-concise}
 LIMIT=${LIMIT:-250}
 
@@ -56,6 +58,9 @@ fi
 if [[ "$CENTER_INTEGRATION_CHECKPOINT" -eq 1 ]]; then
   EXTRA_ARGS+=(--center-integration-checkpoint)
 fi
+if [[ -n "$FILL_HOPS" ]]; then
+  EXTRA_ARGS+=(--fill-hops "$FILL_HOPS")
+fi
 
 PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
   --results outputs/hotpotqa/gpt-4o-mini_nvidia-nv-embed-v2/results_hotpotqa.json \
@@ -70,6 +75,7 @@ PYTHONPATH="$ROOT" "$QAFD_PY" -u -m src.eval.qafd_graph_pair_benchmark \
   --center-rule "$CENTER_RULE" \
   --max-neighbors "$MAX_NEIGHBORS" \
   --max-stars "$MAX_STARS" \
+  --min-neighbors "$MIN_NEIGHBORS" \
   --prompt-style "$PROMPT_STYLE" \
   --limit "$LIMIT" \
   "${EXTRA_ARGS[@]}"

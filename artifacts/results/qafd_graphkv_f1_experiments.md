@@ -181,3 +181,31 @@ This is the first positive matched F1 result. Query-conditioned cache integratio
 ### Next Experiment
 
 Append a dedicated graph-integration checkpoint after the center passage. Those final center tokens can causally aggregate the question, neighbors, and center into a compact latent state before the final answer query; both methods receive the same checkpoint text.
+
+## Attempt 7 — latent_checkpoint_bestedge_h0_n4
+
+**Timestamp:** 2026-08-19T11:19:59+08:00  
+**Hypothesis:** Explicit latent integration tokens after the center passage will concentrate GraphKV graph evidence and extend the positive F1 signal from query-conditioned center prefill.  
+**Changes:** Kept Attempt 6 selection and decoding unchanged; appended the same graph-integration checkpoint text after the center passage in GraphKV and matched Sequential.  
+**Matched Sequential configuration:** Fresh Sequential run with identical QAFD center and neighbors, query-focus prefix, integration checkpoint, order, Tulu3-Block-FT model, concise final prompt, greedy 256-token cap, BF16 FlashAttention2, and A800 hardware.  
+**Important hyperparameters:** pool_k=20; h=0; center_rule=best_edge; max_neighbors=4; max_stars=1; center_query_focus=true; center_integration_checkpoint=true; prompt_style=concise; limit=250; greedy; max_new_tokens=256.  
+
+### Results
+
+| Method | EM | F1 | Avg Latency |
+|---|---:|---:|---:|
+| Sequential | 0.580000 | 0.480698 | 0.433518 s |
+| QAFD + GraphKV | 0.592000 | 0.516881 | 0.590255 s |
+
+**Delta EM:** +0.012000  
+**Delta F1:** +0.036183  
+**Latency ratio:** 1.361548x  
+**Outcome:** target not met.  
+
+### Interpretation
+
+The checkpoint strengthened the positive signal: QAFD+GraphKV reached 0.516881 F1 versus 0.480698 Sequential, a +0.036183 gain, and also led EM by +0.012. It is 0.013817 short of the target. Prior topology analysis indicates the remaining weakness is concentrated in sparse stars.
+
+### Next Experiment
+
+Preserve this query-focus and checkpoint architecture, keep the h=0 center and direct neighbors, and fill only stars with fewer than four neighbors using the highest-QAFD-score h<=1 neighbors. Matched Sequential receives the identical expanded stars.
