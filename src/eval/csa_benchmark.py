@@ -80,6 +80,50 @@ def configuration(args) -> dict:
     }
 
 
+def validate_prediction(row: dict, config: dict, expected_qid: int) -> None:
+    if row.get("qid") != expected_qid:
+        raise ValueError("prediction QID is not the expected contiguous QID")
+    if row.get("configuration") != config:
+        raise ValueError("prediction configuration mismatch")
+    if len(row.get("passages", [])) != 5:
+        raise ValueError("prediction row does not contain five passages")
+    if len(row.get("graph_scores", [])) != 5 or any(
+        len(values) != 5 for values in row["graph_scores"]
+    ):
+        raise ValueError("prediction row does not contain a 5x5 graph matrix")
+    spans = row.get("token_spans", {})
+    passage_spans = spans.get("passages", [])
+    lengths = spans.get("passage_token_lengths", [])
+    if len(passage_spans) != 5 or len(lengths) != 5:
+        raise ValueError("prediction row has incomplete passage token spans")
+    cursor = spans.get("prefix", [None, None])[1]
+    for span, length in zip(passage_spans, lengths):
+        if span[0] != cursor or span[1] - span[0] != length or length < 1:
+            raise ValueError("prediction passage spans are misaligned")
+        cursor = span[1]
+    suffix = spans.get("suffix", [None, None])
+    if suffix[0] != cursor or suffix[1] != spans.get("total_tokens"):
+        raise ValueError("prediction suffix span is misaligned")
+    if not row.get("prompt_hash") or len(row["prompt_hash"]) != 64:
+        raise ValueError("prediction prompt hash is missing")
+    if config["mode"] == "csa":
+        traces = row.get("routing_trace", [])
+        if not traces:
+            raise ValueError("CSA prediction row has no routing trace")
+        for index, trace in enumerate(traces):
+            if trace.get("layer") != index or len(trace.get("selected", [])) != 5:
+                raise ValueError("CSA routing trace is incomplete or out of order")
+            for matrix_name in (
+                "llm_scores",
+                "llm_standardized",
+                "graph_standardized",
+                "combined_scores",
+            ):
+                matrix = trace.get(matrix_name, [])
+                if len(matrix) != 5 or any(len(values) != 5 for values in matrix):
+                    raise ValueError(f"CSA trace has malformed {matrix_name}")
+
+
 def load_completed(path: Path, config: dict, expected_qids: list[int]) -> list[dict]:
     if not path.exists():
         return []
@@ -87,14 +131,7 @@ def load_completed(path: Path, config: dict, expected_qids: list[int]) -> list[d
     if len(rows) > len(expected_qids):
         raise ValueError("prediction file has too many rows")
     for index, row in enumerate(rows):
-        if row.get("qid") != expected_qids[index]:
-            raise ValueError("prediction file is not a contiguous expected-QID prefix")
-        if row.get("configuration") != config:
-            raise ValueError("prediction configuration mismatch")
-        if len(row.get("passages", [])) != 5:
-            raise ValueError("prediction row does not contain five passages")
-        if config["mode"] == "csa" and not row.get("routing_trace"):
-            raise ValueError("CSA prediction row has no routing trace")
+        validate_prediction(row, config, expected_qids[index])
     return rows
 
 
@@ -226,6 +263,7 @@ def main() -> None:
                 "routing_trace": generated["routing_trace"],
                 "routing_summary": generated["routing_summary"],
             }
+            validate_prediction(prediction, config, qid)
             handle.write(json.dumps(prediction) + "\n")
             handle.flush()
             completed.append(prediction)
