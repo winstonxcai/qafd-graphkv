@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import string
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 import igraph as ig
@@ -151,6 +153,23 @@ def mean(values) -> float:
     return sum(values) / len(values) if values else 0.0
 
 
+def file_sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def strategy_description(args) -> str:
+    if args.mode == "vanilla":
+        return "Dense causal joint-prefill control with the matched segmented prompt"
+    return (
+        f"Layerwise causal CSA, {args.pooling}, B={args.top_b}, beta={args.beta:g}, "
+        f"h<=1 QAFD soft prior, {args.backend}"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--retrieval", required=True, type=Path)
@@ -168,6 +187,7 @@ def main() -> None:
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--warmup", action="store_true")
     args = parser.parse_args()
+    run_started_at = datetime.now(timezone.utc).isoformat()
     if args.beta < 0:
         parser.error("beta must be non-negative")
 
@@ -274,6 +294,9 @@ def main() -> None:
     summaries = [row for row in summaries if row]
     summary = {
         "method": args.strategy_name,
+        "strategy_description": strategy_description(args),
+        "started_at": run_started_at,
+        "completed_at": datetime.now(timezone.utc).isoformat(),
         "configuration": config,
         "questions": len(completed),
         "qid_start": expected_qids[0],
@@ -302,6 +325,11 @@ def main() -> None:
         ),
         "model_revision": completed[0]["model_revision"],
         "attention_implementation": completed[0]["attention_implementation"],
+        "source_artifacts": {
+            "retrieval": str(args.retrieval.resolve()),
+            "retrieval_sha256": file_sha256(args.retrieval),
+            "qafd_graph": str(Path(args.graph).resolve()),
+        },
         "predictions": str(output_path.resolve()),
     }
     if args.mode == "vanilla":

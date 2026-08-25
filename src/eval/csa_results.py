@@ -88,6 +88,10 @@ def materialize_b4_alias(root: Path, beta: float, shared_summary: dict, shared_r
     alias = {
         **shared_summary,
         "method": name,
+        "strategy_description": (
+            "Layerwise causal CSA, normalized_token_mean, B=4, "
+            f"beta={beta:g}, h<=1 QAFD soft prior, gathered_sdpa; shared inference"
+        ),
         "configuration": {**shared_summary["configuration"], "beta": beta},
         "predictions": str(prediction_path.resolve()),
         "shared_inference_source": shared_summary["predictions"],
@@ -130,23 +134,30 @@ def select_winner(rows: list[dict]) -> dict:
 
 
 FIELDS = [
-    "method", "pooling", "beta", "top_b", "accuracy", "f1", "avg_seconds",
+    "method", "strategy_description", "started_at", "completed_at", "pooling",
+    "beta", "top_b", "accuracy", "f1", "avg_seconds",
     "avg_tokenization_seconds", "avg_prefill_seconds", "avg_routing_gpu_seconds",
     "avg_decode_seconds", "avg_qk_pair_ratio", "avg_routing_churn",
     "avg_graph_prior_agreement", "delta_accuracy", "ci_low", "ci_high",
     "max_peak_vram_bytes", "shared_inference", "predictions",
+    "configuration_json", "source_artifacts_json",
 ]
 
 
 def write_outputs(rows: list[dict], destination: Path, winner: dict) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     csv_path = destination / "csa_dev_grid.csv"
+    for row in rows:
+        row["configuration_json"] = json.dumps(row.get("configuration", {}), sort_keys=True)
+        row["source_artifacts_json"] = json.dumps(row.get("source_artifacts", {}), sort_keys=True)
     with csv_path.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=FIELDS, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(rows)
     markdown = [
         "# Joint-Prefill Soft-Graph CSA Development Results",
+        "",
+        f"Generated: {datetime.now(timezone.utc).isoformat()}",
         "",
         "Only HotpotQA QIDs 500-699 are included. QIDs 700-949 remain prediction-free.",
         "",
@@ -186,6 +197,11 @@ def source_hashes(repository: Path) -> dict[str, str]:
         repository / "src/csa/graph.py",
         repository / "src/eval/csa_server.py",
         repository / "src/eval/csa_benchmark.py",
+        repository / "src/eval/csa_results.py",
+        repository / "src/eval/run_csa_grid.py",
+        repository / "src/eval/csa_smoke.py",
+        repository / "src/qafd_bridge/run_qafd_slice.py",
+        repository / "src/graph/sparsify.py",
     ]
     return {str(path.relative_to(repository)): sha256(path) for path in sources}
 
