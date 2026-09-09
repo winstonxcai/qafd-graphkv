@@ -166,3 +166,45 @@ def build_query_topology(question: str, documents: list[str], top_k: int = 1) ->
         node_scores=scores,
         config={"top_k": top_k, "k1": _K1, "b": _B, "ranking": "score descending, index ascending"},
     )
+
+
+def build_target_conditioned_topology(
+    question: str, documents: list[str], top_k: int = 1, *, exclude_self: bool = False
+) -> dict[str, Any]:
+    """Select sources independently for each target using question-plus-target BM25.
+
+    The target passage is used only as a routing query; no answer, hop label, or
+    generated text enters the score.  Stable document-index tie-breaking keeps
+    the topology deterministic.  This deliberately tests whether a target-
+    specific graph is more useful than one global source set.
+    """
+    if not isinstance(question, str):
+        raise TypeError("question must be a string")
+    checked_documents = _validate_documents(documents)
+    _validate_k(top_k, len(checked_documents))
+    neighbors: list[list[int]] = []
+    score_matrix: list[list[float]] = []
+    for target, document in enumerate(checked_documents):
+        scores = _bm25_scores(f"{question} {document}", checked_documents)
+        candidates = [index for index in range(len(checked_documents)) if not exclude_self or index != target]
+        if len(candidates) < top_k:
+            raise ValueError("exclude_self leaves fewer than top_k source candidates")
+        ranked_sources = sorted(candidates, key=lambda index: (-scores[index], index))[:top_k]
+        neighbors.append(ranked_sources)
+        score_matrix.append(scores)
+    return {
+        "neighbors": neighbors,
+        "node_scores": [],
+        "target_scores": score_matrix,
+        "method": "bm25_target_conditioned",
+        "config": {
+            "top_k": top_k,
+            "k1": _K1,
+            "b": _B,
+            "ranking": "question-plus-target BM25, score descending, index ascending",
+            "target_specific": True,
+            "exclude_self": exclude_self,
+        },
+        "edge_count": sum(len(sources) for sources in neighbors),
+        "diagonal_edge_count": sum(target in sources for target, sources in enumerate(neighbors)),
+    }

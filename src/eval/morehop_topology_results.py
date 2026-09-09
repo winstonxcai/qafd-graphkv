@@ -27,6 +27,9 @@ ROUTING_METHODS = (
     "full",
     "query_bm25_k1",
     "query_bm25_k3",
+    "target_bm25_k1",
+    "target_bm25_k3",
+    "target_bm25_k1_noself",
     "ppr_k1",
     "random_k1_seed42",
     "reversed_rank_k1",
@@ -256,8 +259,6 @@ def write_outputs(result: dict[str, Any], csv_path: Path, markdown_path: Path) -
     for name, check in result["reference_equivalence"].items():
         status = "PASS" if all(check[key] for key in ("prompt_hash_equal", "generated_equal", "public_score_equal", "strict_score_equal")) else "FAIL"
         lines.append(f"- `{name}` vs `{check['reference']}`: **{status}**; generated text equal={check['generated_equal']}, prompt hash equal={check['prompt_hash_equal']}, scorer outputs equal={check['public_score_equal'] and check['strict_score_equal']}.")
-    if not result["reference_equivalence"]:
-        lines.append("- Cross-run engine equivalence is not recomputed here because the available reference uses different question IDs.")
     baseline = methods.get("sequential")
     nonsequential = [name for name in order if name != "sequential"]
     best = nonsequential[0] if nonsequential else None

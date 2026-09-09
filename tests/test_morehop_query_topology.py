@@ -2,11 +2,28 @@ import pytest
 
 from src.graph.morehop_query_topology import (
     build_query_topology,
+    build_target_conditioned_topology,
     build_source_topology,
     random_source_indices,
     released_last_k_source_indices,
     reverse_rank_source_indices,
 )
+
+
+def test_target_conditioned_topology_is_target_specific_and_deterministic():
+    documents = ["alpha river", "beta river", "gamma mountain"]
+    first = build_target_conditioned_topology("Which river?", documents, 1)
+    second = build_target_conditioned_topology("Which river?", documents, 1)
+    assert first == second
+    assert len(first["neighbors"]) == 3
+    assert all(len(sources) == 1 for sources in first["neighbors"])
+    assert first["config"]["target_specific"] is True
+
+
+def test_target_conditioned_no_self_variant_forces_cross_edges():
+    result = build_target_conditioned_topology("Which river?", ["alpha river", "beta river", "gamma mountain"], 1, exclude_self=True)
+    assert all(target not in sources for target, sources in enumerate(result["neighbors"]))
+    assert result["config"]["exclude_self"] is True
 
 
 def test_query_topology_uses_only_question_and_document_text():

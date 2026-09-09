@@ -17,7 +17,7 @@ from src.eval.graphkv_faithful_morehop import load_rows, prompt_hash, sha256, up
 from src.eval.morehop_scoring import score_both
 from src.graph.morehop_controls import graph_statistics
 
-METHODS = ("released_last1", "released_last3", "full", "query_bm25_k1", "query_bm25_k3", "ppr_k1", "random_k1_seed42", "reversed_rank_k1")
+METHODS = ("released_last1", "released_last3", "full", "query_bm25_k1", "query_bm25_k3", "target_bm25_k1", "target_bm25_k3", "target_bm25_k1_noself", "ppr_k1", "random_k1_seed42", "reversed_rank_k1")
 MAX_NEW_TOKENS = 256
 
 
@@ -90,6 +90,12 @@ def _topology(method, question, documents):
     if method.startswith("query_bm25"):
         from src.graph.morehop_query_topology import build_query_topology
         return build_query_topology(question, documents, int(method.rsplit("k", 1)[1]))
+    if method == "target_bm25_k1_noself":
+        from src.graph.morehop_query_topology import build_target_conditioned_topology
+        return build_target_conditioned_topology(question, documents, 1, exclude_self=True)
+    if method.startswith("target_bm25"):
+        from src.graph.morehop_query_topology import build_target_conditioned_topology
+        return build_target_conditioned_topology(question, documents, int(method.rsplit("k", 1)[1]))
     if method == "ppr_k1":
         from src.graph.morehop_path_topology import build_path_topology
         return build_path_topology(question, documents, 1, alpha=.85, graph_k=3)
