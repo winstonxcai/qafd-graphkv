@@ -149,6 +149,11 @@ def main() -> None:
     parser.add_argument("--output-dir", required=True, type=Path)
     parser.add_argument("--port", type=int, default=8790)
     parser.add_argument("--hop", type=int, choices=range(1, 6), help="only evaluate this hop bucket")
+    parser.add_argument(
+        "--qid-manifest",
+        type=Path,
+        help="optional JSON manifest containing selected_question_ids",
+    )
     parser.add_argument("--methods", default=",".join(METHODS))
     args = parser.parse_args()
 
@@ -159,6 +164,20 @@ def main() -> None:
 
     all_rows = load_rows(args.dataset)
     rows = [row for row in all_rows if args.hop is None or int(row["no_of_hops"]) == args.hop]
+    selection_manifest_sha256 = None
+    if args.qid_manifest:
+        selection = json.loads(args.qid_manifest.read_text())
+        selected_ids = selection.get("selected_question_ids")
+        if not isinstance(selected_ids, list) or not selected_ids:
+            parser.error("qid manifest must contain a non-empty selected_question_ids list")
+        if len(selected_ids) != len(set(selected_ids)):
+            parser.error("qid manifest contains duplicate question IDs")
+        by_id = {row["_id"]: row for row in rows}
+        missing = [question_id for question_id in selected_ids if question_id not in by_id]
+        if missing:
+            parser.error(f"qid manifest contains IDs absent from selected dataset: {missing[:5]}")
+        rows = [by_id[question_id] for question_id in selected_ids]
+        selection_manifest_sha256 = sha256(args.qid_manifest)
     if not rows:
         parser.error("selected hop bucket is empty")
     expected_ids = [row["_id"] for row in rows]
@@ -172,6 +191,9 @@ def main() -> None:
         "dataset_rows": len(all_rows),
         "selected_rows": len(rows),
         "hop": args.hop,
+        "qid_manifest": str(args.qid_manifest.resolve()) if args.qid_manifest else None,
+        "qid_manifest_sha256": selection_manifest_sha256,
+        "selected_question_ids": expected_ids,
         "hop_counts_all": dict(sorted(Counter(int(row["no_of_hops"]) for row in all_rows).items())),
         "hop_counts_selected": dict(sorted(Counter(int(row["no_of_hops"]) for row in rows).items())),
         "methods": methods,
