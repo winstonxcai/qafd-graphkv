@@ -1,0 +1,34 @@
+{
+  "code_hash": "f9a2d8019245b226884056aa5c785799f63f8b32cb2c514f7765dc94e0369c16",
+  "source_hashes": {
+    "src/eval/morehop_routing_runner.py": "25f0c59df822a718f4003e8934bfbb4d04d4000ce339f62c6a18d0ae6bd002a8",
+    "src/eval/morehop_routing_engine.py": "bd33c9d40c0dc8b4e7911cf4507bb71e925eb7cffdabacd4851a24ef2acb7d3b",
+    "src/eval/graphkv_engine_parity.py": "cd5f8b1a70e9e7d608af1991c4dbc0e0e24c1a3c1d956da0a2185c0be599df06",
+    "src/eval/graphkv_faithful_morehop.py": "cbadab3956114f5254eb52fb7d8b386cced6d244a34b009178cc63d564aebd2d",
+    "src/eval/morehop_scoring.py": "db73194673e8fdc9375138c98da4fd831282b330981ebdb06d25d7d8592d5f35",
+    "src/graph/morehop_query_topology.py": "bd4c30a8afa62ecdba618475e5bb215cac1034243ac8bfabcdb3ade313ba8605",
+    "src/graph/morehop_path_topology.py": "e2ada1032b1d6fe5e3c01c3f526bbdd8bd2daead99628699fc8db478accc0b7b",
+    "src/graph/morehop_controls.py": "06db3bca751eddbcb212d26da5d941964450ddb106e2a5d7db073466e1bb772b",
+    "third_party/GraphKV/pcw.py": "89ecd3dd934f61acc246e3e19da774d51bd9c207aecdab3f789f3b6e789e8496"
+  },
+  "model_hash": "c8db318558df9ae93c78728c5924c4ccc9934b86b965ec8d73582e6b5d5a0042",
+  "model_revision": "62eecbdfa4e12821a487e91ed2ef847a85426efe",
+  "dataset_sha256": "169b2bab800dd663ef8f8804a4a3241dd1cfaccd8a131f6ff253e4bcc9abad26",
+  "manifest_sha256": "ae126aaecfaf84425d960a07ad1042fba03f678a37734d9af2a1b1311511a7d4",
+  "gpu": "NVIDIA A800-SXM4-80GB",
+  "slurm_job_id": "23697",
+  "max_new_tokens": 256,
+  "created_at": "2026-09-09T20:27:59.050321+00:00",
+  "selected_question_ids": [
+    "59d07e780bdc11eba7f7acde48001122_3",
+    "5a88fc4255429938390d4019_6",
+    "34f839700bdb11eba7f7acde48001122_2",
+    "5ab40e1c5542996a3a969f00_1",
+    "71f393820baf11ebab90acde48001122_13",
+    "3705552a0bb011ebab90acde48001122_13",
+    "29bf69d20bb011ebab90acde48001122_3",
+    "7c5768260bdc11eba7f7acde48001122_3",
+    "7be06c080baf11ebab90acde48001122_10",
+    "bc702d440baf11ebab90acde48001122_10"
+  ]
+}

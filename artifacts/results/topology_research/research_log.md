@@ -74,3 +74,9 @@ This is a negative result for rank/query/PPR source selection under the current 
 Target-conditioned BM25 was then evaluated on the same frozen 250-question split. It selects sources separately for each target using `question + target passage` and does not use answers or hop labels. k=1 scored 120/250 = 0.480 public-compatible and 101/250 = 0.404 strict-final, versus sequential 117/250 = 0.468 and 98/250 = 0.392. The public paired difference was +0.012 with 95% interval [−0.052, +0.076], so this is not significant and does not meet the +0.05 goal. k=3 scored 112/250 = 0.448.
 
 The k=1 graph had 9.06 diagonal edges and only 1.20 cross edges on average, showing that the apparent small gain is mostly a self-routing control rather than substantial cross-passage transfer. A no-self k=1 variant is the next preregistered mechanism check; it will force one non-self source per target while retaining the same lexical, answer-blind scoring.
+
+### Forced-cross-edge result
+
+The no-self target-conditioned k=1 run completed with 104/250 = 0.416 public-compatible and 91/250 = 0.364 strict-final, versus sequential 117/250 = 0.468 and 98/250 = 0.392. Its public difference was −0.052 with paired 95% interval [−0.112, +0.008]. It had zero diagonal edges and 10.26 cross edges per question on average. Thus the small +0.012 from target-conditioned k=1 comes from retaining mostly self-routing; forcing actual cross-passage cache reads hurts accuracy.
+
+Across the full 250-question screen, no tested global, query-conditioned, PPR, target-conditioned, or forced-cross topology beats sequential by the required +0.05. The evidence now points away from post-hoc cache propagation as the improvement mechanism. A credible next direction is joint-prefill or another mechanism that creates cross-passage interaction before the passage KV states are finalized, with the current sequential and exact GraphKV controls retained.
