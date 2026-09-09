@@ -119,7 +119,16 @@ def load_method_rows(root: Path, method: str, expected_ids: list[str]) -> list[d
     return rows
 
 
-def aggregate(root: Path, manifest_path: Path) -> None:
+def aggregate(
+    root: Path,
+    manifest_path: Path,
+    *,
+    noncomparable_latency_methods: set[str] | None = None,
+    exploratory_methods: set[str] | None = None,
+    execution_note: str | None = None,
+) -> None:
+    noncomparable_latency_methods = noncomparable_latency_methods or set()
+    exploratory_methods = exploratory_methods or set()
     manifest = json.loads(manifest_path.read_text())
     expected_ids = manifest["selected_question_ids"]
     method_rows = {
@@ -151,6 +160,9 @@ def aggregate(root: Path, manifest_path: Path) -> None:
         summaries.append(
             {
                 "method": method,
+                "analysis_role": (
+                    "exploratory" if method in exploratory_methods else "preregistered control"
+                ),
                 "questions": len(expected_ids),
                 "paper_compat_accuracy": sum(paper) / len(paper),
                 "paper_delta_vs_sequential": sum(
@@ -176,6 +188,7 @@ def aggregate(root: Path, manifest_path: Path) -> None:
                     float(row["latency_seconds"]) for row in method_rows[method]
                 )
                 / len(expected_ids),
+                "latency_comparable": method not in noncomparable_latency_methods,
             }
         )
 
@@ -192,17 +205,20 @@ def aggregate(root: Path, manifest_path: Path) -> None:
         "",
         "The paper-compatible and strict-final metrics are separate analyses. They are never combined into one table cell.",
         "",
-        "| Method | Paper-compatible accuracy | Δ vs Sequential (95% CI) | Strict-final accuracy | Δ vs Sequential (95% CI) | Explicit `Answer:` | Avg latency (s) |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        *( [execution_note, ""] if execution_note else [] ),
+        "| Method | Role | Paper-compatible accuracy | Δ vs Sequential (95% CI) | Strict-final accuracy | Δ vs Sequential (95% CI) | Explicit `Answer:` | Avg latency (s) |",
+        "|---|---|---:|---:|---:|---:|---:|---:|",
     ]
     for row in summaries:
         lines.append(
-            f"| {row['method']} | {row['paper_compat_accuracy']:.3f} | {row['paper_delta_vs_sequential']:+.3f} [{row['paper_delta_ci_low']:+.3f}, {row['paper_delta_ci_high']:+.3f}] | {row['strict_final_accuracy']:.3f} | {row['strict_delta_vs_sequential']:+.3f} [{row['strict_delta_ci_low']:+.3f}, {row['strict_delta_ci_high']:+.3f}] | {row['explicit_answer_rate']:.3f} | {row['avg_latency_seconds']:.3f} |"
+            f"| {row['method']} | {row['analysis_role']} | {row['paper_compat_accuracy']:.3f} | {row['paper_delta_vs_sequential']:+.3f} [{row['paper_delta_ci_low']:+.3f}, {row['paper_delta_ci_high']:+.3f}] | {row['strict_final_accuracy']:.3f} | {row['strict_delta_vs_sequential']:+.3f} [{row['strict_delta_ci_low']:+.3f}, {row['strict_delta_ci_high']:+.3f}] | {row['explicit_answer_rate']:.3f} | {row['avg_latency_seconds']:.3f}{'' if row['latency_comparable'] else '*'} |"
         )
     lines.extend(
         [
             "",
             "This 100-question calibration run is an implementation/topology check, not a confirmation result. Confidence intervals are paired question-level bootstrap intervals with 20,000 resamples.",
+            "",
+            "`*` Mixed-hardware timing is recorded for completeness but excluded from latency comparisons.",
         ]
     )
     (root / "report.md").write_text("\n".join(lines) + "\n")
@@ -219,11 +235,22 @@ def main() -> None:
     aggregate_parser = subparsers.add_parser("aggregate")
     aggregate_parser.add_argument("--root", required=True, type=Path)
     aggregate_parser.add_argument("--manifest", required=True, type=Path)
+    aggregate_parser.add_argument(
+        "--noncomparable-latency-method", action="append", default=[]
+    )
+    aggregate_parser.add_argument("--exploratory-method", action="append", default=[])
+    aggregate_parser.add_argument("--execution-note")
     args = parser.parse_args()
     if args.command == "manifest":
         write_manifest(args.dataset, args.output, args.questions, args.seed)
     else:
-        aggregate(args.root, args.manifest)
+        aggregate(
+            args.root,
+            args.manifest,
+            noncomparable_latency_methods=set(args.noncomparable_latency_method),
+            exploratory_methods=set(args.exploratory_method),
+            execution_note=args.execution_note,
+        )
 
 
 if __name__ == "__main__":
