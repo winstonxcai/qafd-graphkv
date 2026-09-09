@@ -40,3 +40,9 @@ def test_invalid_parameters_are_rejected():
         build_path_topology("q", ["d"], alpha=1.1)
     with pytest.raises(ValueError):
         stage_neighbors(2, [[2]])
+    with pytest.raises(ValueError):
+        stage_neighbors(2, [[0], [0, 1]])
+    with pytest.raises(ValueError):
+        build_path_topology("q", ["d"], alpha=1.0)
+    with pytest.raises(ValueError):
+        build_path_topology("q", ["d"], top_k=2)

@@ -95,7 +95,7 @@ def _ppr(seed: list[float], weighted: list[list[tuple[int, float]]], alpha: floa
         if sum(abs(left - right) for left, right in zip(next_scores, scores)) <= _TOLERANCE:
             return [value if math.isfinite(value) and value >= 0.0 else 0.0 for value in next_scores], iteration
         scores = next_scores
-    return scores, _MAX_ITERATIONS
+    raise RuntimeError("PPR did not converge within the iteration bound")
 
 
 def build_path_topology(
@@ -110,12 +110,12 @@ def build_path_topology(
     The returned neighbor set is global: every target receives the same
     highest-PPR sources, including a selected source's own index.
     """
-    if not isinstance(top_k, int) or top_k < 0:
-        raise ValueError("top_k must be a non-negative integer")
-    if not isinstance(graph_k, int) or graph_k < 0:
+    if type(top_k) is not int or not 1 <= top_k <= len(documents):
+        raise ValueError("top_k must be between 1 and len(documents)")
+    if type(graph_k) is not int or graph_k < 0:
         raise ValueError("graph_k must be a non-negative integer")
-    if not 0.0 <= alpha <= 1.0 or not math.isfinite(alpha):
-        raise ValueError("alpha must be finite and between 0 and 1")
+    if not 0.0 <= alpha < 1.0 or not math.isfinite(alpha):
+        raise ValueError("alpha must be finite and in [0, 1)")
     if any(not isinstance(document, str) for document in documents) or not isinstance(question, str):
         raise TypeError("question and documents must be strings")
 
@@ -166,9 +166,10 @@ def stage_neighbors(n_documents: int, stages: Sequence[Sequence[int]]) -> list[l
         for node in members:
             if not isinstance(node, int) or isinstance(node, bool) or not 0 <= node < n_documents:
                 raise ValueError("stage document IDs must be valid document indices")
-            if node not in current:
-                current.append(node)
-            owner.setdefault(node, layer)
+            if node in owner:
+                raise ValueError("a document must occur in exactly one stage")
+            current.append(node)
+            owner[node] = layer
         normalized.append(current)
     result = [[] for _ in range(n_documents)]
     for node, layer in owner.items():
