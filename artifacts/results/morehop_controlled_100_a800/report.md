@@ -1,6 +1,6 @@
 # Matched MoreHopQA topology comparison
 
-Frozen manifest: `artifacts/results/morehop_controlled_100_a800/manifest.json` (`3f954ce9192cbb5c654d1bb888d2a9f819e076b9d88a19eb0d0180847c789e6b`). All methods used the same 100 questions, prompt hashes, document order, model revision, greedy decoding, and 256-token cap.
+Frozen manifest: `artifacts/results/morehop_controlled_100_a800/manifest.json` (`2948f5776290f9587d28fc2a4b6636793bdff897cd5d39681cf88178f01775de`). All methods used the same 100 questions, prompt hashes, document order, model revision, greedy decoding, and 256-token cap.
 
 The paper-compatible and strict-final metrics are separate analyses. They are never combined into one table cell.
 
@@ -17,4 +17,4 @@ All six methods ran with one NVIDIA A800 per worker via Slurm a800-debug job 210
 
 This 100-question calibration run is an implementation/topology check, not a confirmation result. Confidence intervals are paired question-level bootstrap intervals with 20,000 resamples.
 
-`*` Mixed-hardware timing is recorded for completeness but excluded from latency comparisons.
+All latency values are directly comparable because every method ran on the same A800 node type under the same Slurm partition.

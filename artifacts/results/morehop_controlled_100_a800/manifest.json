@@ -5,6 +5,7 @@
   "selection": "proportional-by-hop SHA-256 ordering",
   "selection_seed": "20260909:morehop-controlled-100",
   "question_count": 100,
+  "execution_hardware": "1 x NVIDIA A800 per method worker via Slurm a800-debug job 21061",
   "hop_counts": {
     "1": 40,
     "2": 37,

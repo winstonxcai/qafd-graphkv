@@ -30,6 +30,7 @@
   "context_limit": 8192,
   "context_reserve": 256,
   "teacher_forced_steps": 8,
+  "execution_hardware": "1 x NVIDIA A800 via Slurm a800-debug job 21060",
   "max_new_tokens": 256,
   "upstream_function": "third_party/GraphKV/pcw.py::gapemp",
   "graphkv_submodule_commit": "ba01bbcc98fc9a352582dd1e75ab88fa6cac0dfb",
