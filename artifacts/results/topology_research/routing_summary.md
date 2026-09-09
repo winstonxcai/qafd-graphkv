@@ -42,7 +42,8 @@ The parity controls below compare the new routing engine against the existing pr
 - `released_last3` vs `graphkv_top3`: **PASS**; generated text equal=True, prompt hash equal=True, scorer outputs equal=True.
 - `full` vs `graphkv_full`: **PASS**; generated text equal=True, prompt hash equal=True, scorer outputs equal=True.
 
-No claim of held-out improvement is made from this screen. The released-last-1 control is an exact reproduction of GraphKV Top-1, not a new topology. Query-BM25-k1 is the strongest non-released topology in this screen but trails released-last-1 by one question and needs confirmation on a larger, predeclared sample.
+On this 100-question confirmation, `released_last1` is the best non-sequential result at 0.480, versus sequential at 0.420 (Δ +0.060); this is exploratory until a predeclared replication confirms it.
+The released-last-1 control is an exact reproduction of GraphKV Top-1, not a new topology. Confidence intervals are paired over the identical question IDs; none of the tested public-accuracy differences excludes zero.
 
 ## Reproduction
 

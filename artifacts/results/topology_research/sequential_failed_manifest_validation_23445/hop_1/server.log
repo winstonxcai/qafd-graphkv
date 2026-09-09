@@ -1,0 +1,15 @@
+ROOT=/mnt/beegfs/home/Winston/old_data/qafd-graphkv
+MODEL_PATH=/mnt/beegfs/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe
+HOP=1
+drwxr-xr-x 2 Winston Winston 4096 Aug 18 17:02 /mnt/beegfs/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe
+lrwxrwxrwx 1 Winston Winston   52 Aug 18 14:20 /mnt/beegfs/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe/config.json -> ../../blobs/99cffd6528c7c9405cf2ac67acf631017b5b668b
+/mnt/beegfs/home/Winston/old_data/miniconda3/envs/graphkv/lib/python3.10/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.10s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.11s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.15s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.23it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.08it/s]
+ * Serving Flask app 'matched_all_methods_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8791
+ * Running on http://10.103.69.81:8791
+[33mPress CTRL+C to quit[0m

@@ -1,0 +1,17 @@
+[
+  {
+    "method": "sequential",
+    "questions": 93,
+    "paper_compat_accuracy": 0.3333333333333333,
+    "strict_final_accuracy": 0.25806451612903225,
+    "explicit_answer_rate": 0.7741935483870968,
+    "avg_latency_seconds": 3.089747036436713,
+    "total_latency_seconds": 287.3464743886143,
+    "by_hop": {
+      "2": {
+        "questions": 93,
+        "accuracy": 0.3333333333333333
+      }
+    }
+  }
+]

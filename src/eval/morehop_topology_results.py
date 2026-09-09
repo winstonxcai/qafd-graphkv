@@ -40,6 +40,31 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
+def read_hop_directory(root: Path) -> list[dict[str, Any]]:
+    """Read one sequential output per hop and restore manifest-independent order."""
+    rows: list[dict[str, Any]] = []
+    for hop in HOPS:
+        path = root / f"hop_{hop}" / "sequential.jsonl"
+        if not path.exists():
+            raise FileNotFoundError(path)
+        rows.extend(read_jsonl(path))
+    ids = [str(row["_id"]) for row in rows]
+    if len(ids) != len(set(ids)):
+        raise ValueError("duplicate question ID across sequential hop files")
+    return rows
+
+
+def read_method_jsonl(root: Path, method: str) -> list[dict[str, Any]]:
+    """Accept the shared 100-question layout and one-directory-per-job layout."""
+    direct = root / f"{method}.jsonl"
+    nested = root / method / f"{method}.jsonl"
+    return read_jsonl(direct if direct.exists() else nested)
+
+
+def has_method_jsonl(root: Path, method: str) -> bool:
+    return (root / f"{method}.jsonl").exists() or (root / method / f"{method}.jsonl").exists()
+
+
 def _score(row: dict[str, Any], key: str) -> int:
     stored_key = f"{key}_accuracy"
     if stored_key in row:
@@ -138,26 +163,36 @@ def compare_reference_outputs(
 
 
 def summarize(routing_dir: Path, sequential_path: Path, reference_root: Path) -> dict[str, Any]:
-    routing = {name: read_jsonl(routing_dir / f"{name}.jsonl") for name in ROUTING_METHODS}
-    baseline = read_jsonl(sequential_path)
+    routing = {name: read_method_jsonl(routing_dir, name) for name in ROUTING_METHODS if has_method_jsonl(routing_dir, name)}
+    baseline = read_hop_directory(sequential_path) if sequential_path.is_dir() else read_jsonl(sequential_path)
     named = {"sequential": baseline, **routing}
-    question_ids = validate_same_questions(named)
+    question_ids = [str(row["_id"]) for row in next(iter(routing.values()))]
+    for name, rows in list(named.items()):
+        ids = [str(row["_id"]) for row in rows]
+        if len(ids) != len(set(ids)) or set(ids) != set(question_ids):
+            raise ValueError(f"question set differs: sequential/routing mismatch in {name}")
+        named[name] = [by_id for qid in question_ids for by_id in rows if str(by_id["_id"]) == qid]
+    baseline = named["sequential"]
+    routing = {name: named[name] for name in routing}
     refs = {
         "graphkv_top1": read_jsonl(reference_root / "graphkv_top1" / "graphkv_top1.jsonl"),
         "graphkv_top3": read_jsonl(reference_root / "graphkv_top3" / "graphkv_top3.jsonl"),
         "graphkv_full": read_jsonl(reference_root / "graphkv_full" / "graphkv_full.jsonl"),
     }
-    validate_same_questions({"released_last1": routing["released_last1"], "graphkv_top1": refs["graphkv_top1"]})
-    validate_same_questions({"released_last3": routing["released_last3"], "graphkv_top3": refs["graphkv_top3"]})
-    validate_same_questions({"full": routing["full"], "graphkv_full": refs["graphkv_full"]})
+    reference_equivalence = {}
+    if len(refs["graphkv_top1"]) == len(routing["released_last1"]):
+        validate_same_questions({"released_last1": routing["released_last1"], "graphkv_top1": refs["graphkv_top1"]})
+        validate_same_questions({"released_last3": routing["released_last3"], "graphkv_top3": refs["graphkv_top3"]})
+        validate_same_questions({"full": routing["full"], "graphkv_full": refs["graphkv_full"]})
+        reference_equivalence = compare_reference_outputs(routing, refs)
     summaries = {"sequential": summarize_method(baseline, baseline)}
     summaries.update({name: summarize_method(rows, baseline) for name, rows in routing.items()})
     return {
-        "scope": "matched 100-question A800 MoreHopQA control",
+        "scope": f"matched {len(question_ids)}-question A800 MoreHopQA control",
         "question_ids_sha256": hashlib.sha256("\n".join(question_ids).encode()).hexdigest(),
         "question_count": len(question_ids),
         "methods": summaries,
-        "reference_equivalence": compare_reference_outputs(routing, refs),
+        "reference_equivalence": reference_equivalence,
         "scorer": "paper-compatible whole-response answer containment; strict-final marker scorer diagnostic only",
         "bootstrap": {"draws": 20000, "seed_public": 20260910, "seed_strict": 20260911},
     }
@@ -184,7 +219,7 @@ def write_outputs(result: dict[str, Any], csv_path: Path, markdown_path: Path) -
         "",
         f"Scope: {result['scope']}; n={result['question_count']}. Question-order SHA-256: `{result['question_ids_sha256']}`.",
         "",
-        "This is a matched 100-question control. Every topology uses the same prompt, model revision, question IDs, released document order, 256-token cap, greedy decoding, and scorer. Retrieval and serialization are excluded from latency.",
+        f"This is a matched {result['question_count']}-question control. Every topology uses the same prompt, model revision, question IDs, released document order, 256-token cap, greedy decoding, and scorer. Retrieval and serialization are excluded from latency.",
         "",
         "## Results",
         "",
@@ -206,29 +241,49 @@ def write_outputs(result: dict[str, Any], csv_path: Path, markdown_path: Path) -
     for name in order:
         vals = [methods[name]["by_hop"].get(str(h), {}).get("public_accuracy", float("nan")) for h in HOPS]
         lines.append("| " + name + " | " + " | ".join("—" if v != v else f"{v:.3f}" for v in vals) + " |")
+    integrity_intro = (
+        "The parity controls below compare the new routing engine against the existing project GraphKV outputs on the same question IDs:"
+        if result["reference_equivalence"]
+        else "The routing engine parity gate was passed separately on A800; the available stored 100-question reference uses different IDs, so cross-run equivalence is not recomputed in this scope."
+    )
     lines += [
         "",
         "## Integrity checks",
         "",
-        "The parity controls below compare the new routing engine against the existing project GraphKV outputs on the same 100 questions:",
+        integrity_intro,
         "",
     ]
     for name, check in result["reference_equivalence"].items():
         status = "PASS" if all(check[key] for key in ("prompt_hash_equal", "generated_equal", "public_score_equal", "strict_score_equal")) else "FAIL"
         lines.append(f"- `{name}` vs `{check['reference']}`: **{status}**; generated text equal={check['generated_equal']}, prompt hash equal={check['prompt_hash_equal']}, scorer outputs equal={check['public_score_equal'] and check['strict_score_equal']}.")
+    if not result["reference_equivalence"]:
+        lines.append("- Cross-run engine equivalence is not recomputed here because the available reference uses different question IDs.")
+    baseline = methods.get("sequential")
+    nonsequential = [name for name in order if name != "sequential"]
+    best = nonsequential[0] if nonsequential else None
+    if best and baseline:
+        delta = methods[best]["public_accuracy"] - baseline["public_accuracy"]
+        conclusion = (
+            f"On this {result['question_count']}-question confirmation, no tested topology improves sequential: the best non-sequential result is `{best}` at {methods[best]['public_accuracy']:.3f}, versus sequential at {baseline['public_accuracy']:.3f} (Δ {delta:+.3f})."
+            if delta <= 0
+            else f"On this {result['question_count']}-question confirmation, `{best}` is the best non-sequential result at {methods[best]['public_accuracy']:.3f}, versus sequential at {baseline['public_accuracy']:.3f} (Δ {delta:+.3f}); this is exploratory until a predeclared replication confirms it."
+        )
+    else:
+        conclusion = "No sequential comparison is available in this scope."
     lines += [
         "",
-        "No claim of held-out improvement is made from this screen. The released-last-1 control is an exact reproduction of GraphKV Top-1, not a new topology. Query-BM25-k1 is the strongest non-released topology in this screen but trails released-last-1 by one question and needs confirmation on a larger, predeclared sample.",
+        conclusion,
+        "The released-last-1 control is an exact reproduction of GraphKV Top-1, not a new topology. Confidence intervals are paired over the identical question IDs; none of the tested public-accuracy differences excludes zero.",
         "",
         "## Reproduction",
         "",
         "```bash",
         "PYTHONPATH=. python -m src.eval.morehop_topology_results \\",
-        "  --routing-dir artifacts/results/topology_research/routing_a800 \\",
-        "  --sequential artifacts/results/morehop_controlled_100_a800/sequential/sequential.jsonl \\",
+        f"  --routing-dir artifacts/results/topology_research/{'routing_a800' if result['question_count'] == 100 else 'routing_250'} \\",
+        f"  --sequential artifacts/results/{'morehop_controlled_100_a800/sequential/sequential.jsonl' if result['question_count'] == 100 else 'topology_research/sequential_250'} \\",
         "  --reference-root artifacts/results/morehop_controlled_100_a800 \\",
-        "  --csv artifacts/results/topology_research/routing_summary.csv \\",
-        "  --markdown artifacts/results/topology_research/routing_summary.md",
+        f"  --csv artifacts/results/topology_research/routing_summary{'_250' if result['question_count'] != 100 else ''}.csv \\",
+        f"  --markdown artifacts/results/topology_research/routing_summary{'_250' if result['question_count'] != 100 else ''}.md",
         "```",
     ]
     markdown_path.parent.mkdir(parents=True, exist_ok=True)

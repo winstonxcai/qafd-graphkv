@@ -1,0 +1,36 @@
+{
+  "run_started_at": "2026-09-09T20:02:44.607159+00:00",
+  "dataset": "/nfs-data0/home/Winston/old_data/qafd-graphkv/artifacts/results/morehop_faithful_reproduction/input/with_human_verification_ascend.jsonl",
+  "dataset_sha256": "169b2bab800dd663ef8f8804a4a3241dd1cfaccd8a131f6ff253e4bcc9abad26",
+  "dataset_rows": 1118,
+  "selected_rows": 3,
+  "hop": 4,
+  "qid_manifest": "/nfs-data0/home/Winston/old_data/qafd-graphkv/artifacts/results/topology_research/manifest_250.json",
+  "qid_manifest_sha256": "052252eb76493564f967d925fc5bd9d2f21e9d122bf1d841f3f04c5f315421e4",
+  "selected_question_ids": [
+    "6f1c59360bdd11eba7f7acde48001122_3",
+    "9e506db00bdc11eba7f7acde48001122_3",
+    "642b190c0bda11eba7f7acde48001122_3"
+  ],
+  "hop_counts_all": {
+    "1": 444,
+    "2": 416,
+    "3": 154,
+    "4": 13,
+    "5": 91
+  },
+  "hop_counts_selected": {
+    "4": 3
+  },
+  "methods": [
+    "sequential"
+  ],
+  "model": "ldsjmdy/Tulu3-Block-FT",
+  "retrieved_chunks": 10,
+  "document_order": "released MoreHopQA ascend file order",
+  "max_new_tokens": 256,
+  "primary_replication_score": "paper_compat_accuracy: public GraphKV rag_eval.py final Answer: extraction with whole-response fallback plus normalized substring containment",
+  "integrity_audit_score": "strict_final_accuracy: require an explicit final Answer: marker; missing markers score incorrect",
+  "graphkv_submodule_commit": "ba01bbcc98fc9a352582dd1e75ab88fa6cac0dfb",
+  "project_commit": "c16dd21748892e0e4f0b83a0d388c5a7b5ea4960"
+}

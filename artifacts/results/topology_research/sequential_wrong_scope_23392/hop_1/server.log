@@ -1,0 +1,495 @@
+ROOT=/mnt/beegfs/home/Winston/old_data/qafd-graphkv
+MODEL_PATH=/mnt/beegfs/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe
+HOP=1
+drwxr-xr-x 2 Winston Winston 4096 Aug 18 17:02 /mnt/beegfs/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe
+lrwxrwxrwx 1 Winston Winston   52 Aug 18 14:20 /mnt/beegfs/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe/config.json -> ../../blobs/99cffd6528c7c9405cf2ac67acf631017b5b668b
+/mnt/beegfs/home/Winston/old_data/miniconda3/envs/graphkv/lib/python3.10/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:03,  1.10s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:02<00:02,  1.16s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:03<00:01,  1.15s/it]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.25it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:03<00:00,  1.08it/s]
+ * Serving Flask app 'matched_all_methods_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8791
+ * Running on http://10.103.69.81:8791
+[33mPress CTRL+C to quit[0m
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+The attention mask is not set and cannot be inferred from input because pad token is same as eos token. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+127.0.0.1 - - [10/Sep/2026 03:48:06] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:10] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:13] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:14] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:17] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:19] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:24] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:26] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:29] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:33] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:38] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:42] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:44] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:47] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:49] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:53] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:48:58] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:02] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:03] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:06] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:08] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:10] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:12] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:14] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:16] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:19] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:21] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:23] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:26] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:28] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:31] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:34] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:37] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:40] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:43] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:46] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:49] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:51] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:54] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:57] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:49:58] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:01] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:05] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:09] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:11] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:14] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:17] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:22] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:25] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:27] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:29] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:33] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:37] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:41] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:43] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:46] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:51] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:54] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:50:57] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:00] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:04] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:08] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:12] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:15] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:19] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:21] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:23] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:24] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:27] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:31] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:35] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:38] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:42] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:45] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:47] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:50] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:53] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:51:57] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:01] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:04] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:07] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:09] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:11] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:14] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:17] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:20] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:22] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:23] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:27] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:33] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:38] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:42] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:45] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:48] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:50] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:53] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:56] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:52:58] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:02] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:06] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:09] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:13] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:15] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:19] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:23] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:26] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:28] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:33] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:37] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:41] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:45] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:49] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:52] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:53:57] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:00] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:03] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:06] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:09] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:12] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:14] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:17] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:20] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:23] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:26] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:29] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:33] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:37] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:39] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:41] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:43] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:46] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:48] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:51] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:53] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:56] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:54:59] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:03] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:06] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:11] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:13] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:16] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:18] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:21] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:24] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:27] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:29] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:32] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:34] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:36] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:38] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:40] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:42] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:44] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:46] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:49] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:52] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:55] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:55:56] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
+127.0.0.1 - - [10/Sep/2026 03:56:00] "POST /generate_vanilla HTTP/1.1" 200 -
+The attention mask and the pad token id were not set. As a consequence, you may observe unexpected behavior. Please pass your input's `attention_mask` to obtain reliable results.
+Setting `pad_token_id` to `eos_token_id`:128001 for open-end generation.
