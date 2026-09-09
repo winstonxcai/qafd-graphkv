@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import sys
+import hashlib
 from collections import defaultdict
 from typing import Any
 
@@ -100,9 +101,13 @@ def build_one_round_cache(model, tokenizer, emb, blocks: list[str], neighbors: l
     if not documents or len(neighbors) != len(documents):
         raise ValueError("neighbors must have one entry per document")
     for target, sources in enumerate(neighbors):
+        if len(sources) != len(set(sources)):
+            raise ValueError("duplicate source index")
         for source in sources:
-            if not isinstance(source, int) or not 0 <= source < len(documents):
+            if type(source) is not int or not 0 <= source < len(documents):
                 raise ValueError(f"invalid source index {source} for target {target}")
+    # Routing selects a set; preserve released order inside every source cache.
+    neighbors = [sorted(sources) for sources in neighbors]
 
     raw_documents, ids, lengths = _encode_raw_documents(model, tokenizer, emb, blocks)
     groups: dict[tuple[int, ...], list[int]] = defaultdict(list)
@@ -119,6 +124,7 @@ def build_one_round_cache(model, tokenizer, emb, blocks: list[str], neighbors: l
         # Apply final RoPE only after prefix + raw + updated are concatenated.
         final = apply_pkv_rotary_position_embeddings(concact_pkv(prefix_cache, context), emb)
     metadata = {
+        "input_ids_sha256": {key: hashlib.sha256(value.numpy().tobytes()).hexdigest() for key, value in ids.items()},
         "document_token_counts": lengths,
         "raw_document_token_count": sum(lengths),
         "updated_document_token_count": sum(lengths),
