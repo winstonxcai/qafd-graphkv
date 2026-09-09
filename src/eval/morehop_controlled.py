@@ -20,6 +20,7 @@ METHODS = (
     "sequential",
     "block_rag",
     "graphkv_top1",
+    "graphkv_top2",
     "graphkv_top3",
     "graphkv_full",
 )

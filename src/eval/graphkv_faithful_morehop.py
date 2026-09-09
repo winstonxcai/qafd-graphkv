@@ -113,6 +113,7 @@ METHODS = {
     "sequential": ("/generate_vanilla", None),
     "block_rag": ("/generate_block", None),
     "graphkv_top1": ("/generate_gapemp_appr", {"top_k": 1}),
+    "graphkv_top2": ("/generate_gapemp_appr", {"top_k": 2}),
     "graphkv_top3": ("/generate_gapemp_appr", {"top_k": 3}),
     "graphkv_full": ("/generate_gapemp", None),
 }
