@@ -1,0 +1,7 @@
+method,analysis_role,questions,paper_compat_accuracy,paper_delta_vs_sequential,paper_delta_ci_low,paper_delta_ci_high,strict_final_accuracy,strict_delta_vs_sequential,strict_delta_ci_low,strict_delta_ci_high,explicit_answer_rate,avg_latency_seconds,latency_comparable
+sequential,preregistered control,100,0.42,0.0,0.0,0.0,0.34,0.0,0.0,0.0,0.75,3.177712427973747,True
+block_rag,preregistered control,100,0.39,-0.03,-0.11,0.05,0.3,-0.04,-0.12,0.04,0.82,3.589563305545598,True
+graphkv_top1,preregistered control,100,0.48,0.06,0.0,0.12,0.39,0.05,-0.03,0.13,0.85,3.932144793663174,True
+graphkv_top2,exploratory,100,0.42,0.0,-0.08,0.08,0.37,0.03,-0.06,0.12,0.85,3.9010001035034656,True
+graphkv_top3,preregistered control,100,0.43,0.01,-0.06,0.08,0.35,0.01,-0.07,0.09,0.8,3.8629641941934825,True
+graphkv_full,preregistered control,100,0.42,0.0,-0.07,0.07,0.32,-0.02,-0.1,0.06,0.81,3.983782234173268,True

@@ -1,0 +1,33 @@
+[
+  {
+    "method": "graphkv_full",
+    "questions": 100,
+    "paper_compat_accuracy": 0.42,
+    "strict_final_accuracy": 0.32,
+    "explicit_answer_rate": 0.81,
+    "avg_latency_seconds": 3.983782234173268,
+    "total_latency_seconds": 398.3782234173268,
+    "by_hop": {
+      "1": {
+        "questions": 40,
+        "accuracy": 0.7
+      },
+      "2": {
+        "questions": 37,
+        "accuracy": 0.2702702702702703
+      },
+      "3": {
+        "questions": 14,
+        "accuracy": 0.14285714285714285
+      },
+      "4": {
+        "questions": 1,
+        "accuracy": 0.0
+      },
+      "5": {
+        "questions": 8,
+        "accuracy": 0.25
+      }
+    }
+  }
+]

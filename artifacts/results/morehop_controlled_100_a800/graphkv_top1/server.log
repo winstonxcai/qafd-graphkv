@@ -1,0 +1,110 @@
+/mnt/beegfs/home/Winston/old_data/miniconda3/envs/graphkv/lib/python3.10/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:02,  1.34it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:01<00:01,  1.30it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:02<00:00,  1.33it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.92it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:02<00:00,  1.65it/s]
+ * Serving Flask app 'matched_all_methods_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8892
+ * Running on http://10.103.69.83:8892
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [09/Sep/2026 20:11:43] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:11:46] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:11:50] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:11:55] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:11:57] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:02] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:06] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:09] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:13] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:16] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:22] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:26] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:28] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:30] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:33] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:36] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:38] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:42] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:45] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:47] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:54] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:12:59] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:04] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:10] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:14] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:18] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:22] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:26] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:29] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:33] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:36] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:40] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:44] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:47] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:54] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:13:58] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:04] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:06] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:10] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:13] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:16] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:19] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:23] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:26] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:30] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:35] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:40] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:44] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:50] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:54] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:14:59] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:03] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:07] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:11] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:15] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:19] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:23] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:27] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:30] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:35] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:40] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:46] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:50] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:15:54] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:00] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:03] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:06] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:10] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:12] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:17] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:21] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:25] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:28] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:31] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:35] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:39] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:44] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:47] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:53] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:16:58] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:01] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:05] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:07] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:13] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:19] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:21] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:26] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:30] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:33] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:38] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:44] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:48] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:52] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:17:55] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:18:01] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:18:04] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:18:06] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:18:07] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:18:11] "POST /generate_gapemp_appr HTTP/1.1" 200 -
+127.0.0.1 - - [09/Sep/2026 20:18:13] "POST /generate_gapemp_appr HTTP/1.1" 200 -

@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-09-09T12:09:20.974460+00:00",
+  "dataset": "/nfs-data0/home/Winston/old_data/qafd-graphkv/artifacts/results/morehop_faithful_reproduction/input/with_human_verification_ascend.jsonl",
+  "dataset_sha256": "169b2bab800dd663ef8f8804a4a3241dd1cfaccd8a131f6ff253e4bcc9abad26",
+  "selection_seed": "20260909:morehop-engine-parity",
+  "selected_question_ids": [
+    "59d07e780bdc11eba7f7acde48001122_3",
+    "5a88fc4255429938390d4019_6",
+    "34f839700bdb11eba7f7acde48001122_2",
+    "5ab40e1c5542996a3a969f00_1",
+    "71f393820baf11ebab90acde48001122_13",
+    "3705552a0bb011ebab90acde48001122_13",
+    "29bf69d20bb011ebab90acde48001122_3",
+    "7c5768260bdc11eba7f7acde48001122_3",
+    "7be06c080baf11ebab90acde48001122_10",
+    "bc702d440baf11ebab90acde48001122_10"
+  ],
+  "selected_hop_counts": {
+    "1": 2,
+    "2": 2,
+    "3": 2,
+    "4": 2,
+    "5": 2
+  },
+  "model": "ldsjmdy/Tulu3-Block-FT",
+  "model_path": "/nfs-data0/home/Winston/old_data/qafd-graphkv/.cache/huggingface/hub/models--ldsjmdy--Tulu3-Block-FT/snapshots/62eecbdfa4e12821a487e91ed2ef847a85426efe",
+  "model_revision": "62eecbdfa4e12821a487e91ed2ef847a85426efe",
+  "torch_dtype": "bfloat16",
+  "attention_backend": "flash_attention_2",
+  "context_limit": 8192,
+  "context_reserve": 256,
+  "teacher_forced_steps": 8,
+  "max_new_tokens": 256,
+  "upstream_function": "third_party/GraphKV/pcw.py::gapemp",
+  "graphkv_submodule_commit": "ba01bbcc98fc9a352582dd1e75ab88fa6cac0dfb",
+  "project_commit": "bc9571e126693eab353e5329c5dda654ccf8e2e6"
+}
