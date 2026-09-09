@@ -164,7 +164,7 @@ def main() -> None:
         parser.error(f"unknown methods: {unknown}")
 
     all_rows = load_rows(args.dataset)
-    rows = [row for row in all_rows if args.hop is None or int(row["no_of_hops"]) == args.hop]
+    rows = list(all_rows)
     selection_manifest_sha256 = None
     if args.qid_manifest:
         selection = json.loads(args.qid_manifest.read_text())
@@ -173,12 +173,14 @@ def main() -> None:
             parser.error("qid manifest must contain a non-empty selected_question_ids list")
         if len(selected_ids) != len(set(selected_ids)):
             parser.error("qid manifest contains duplicate question IDs")
-        by_id = {row["_id"]: row for row in rows}
+        by_id = {row["_id"]: row for row in all_rows}
         missing = [question_id for question_id in selected_ids if question_id not in by_id]
         if missing:
             parser.error(f"qid manifest contains IDs absent from selected dataset: {missing[:5]}")
         rows = [by_id[question_id] for question_id in selected_ids]
         selection_manifest_sha256 = sha256(args.qid_manifest)
+    if args.hop is not None:
+        rows = [row for row in rows if int(row["no_of_hops"]) == args.hop]
     if not rows:
         parser.error("selected hop bucket is empty")
     expected_ids = [row["_id"] for row in rows]
