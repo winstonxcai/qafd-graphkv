@@ -1,0 +1,15 @@
+[
+  {
+    "method": "graphkv_full",
+    "questions": 91,
+    "accuracy": 0.43956043956043955,
+    "avg_latency_seconds": 4.7425098691217515,
+    "total_latency_seconds": 431.5683980900794,
+    "by_hop": {
+      "5": {
+        "questions": 91,
+        "accuracy": 0.43956043956043955
+      }
+    }
+  }
+]

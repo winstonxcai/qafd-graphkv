@@ -1,0 +1,28 @@
+{
+  "run_started_at": "2026-09-09T03:59:24.661570+00:00",
+  "dataset": "/nfs-data0/home/Winston/old_data/qafd-graphkv/artifacts/results/morehop_faithful_reproduction/input/with_human_verification_ascend.jsonl",
+  "dataset_sha256": "169b2bab800dd663ef8f8804a4a3241dd1cfaccd8a131f6ff253e4bcc9abad26",
+  "dataset_rows": 1118,
+  "selected_rows": 416,
+  "hop": 2,
+  "hop_counts_all": {
+    "1": 444,
+    "2": 416,
+    "3": 154,
+    "4": 13,
+    "5": 91
+  },
+  "hop_counts_selected": {
+    "2": 416
+  },
+  "methods": [
+    "graphkv_full"
+  ],
+  "model": "ldsjmdy/Tulu3-Block-FT",
+  "retrieved_chunks": 10,
+  "document_order": "released MoreHopQA ascend file order",
+  "max_new_tokens": 1024,
+  "accuracy": "GraphKV rag_eval.py MoreHopQA final Answer: extraction plus normalized substring containment",
+  "graphkv_submodule_commit": "ba01bbcc98fc9a352582dd1e75ab88fa6cac0dfb",
+  "project_commit": "1d3a856bc16aaa5e20b1b95be8d9f6f98155bb82"
+}
