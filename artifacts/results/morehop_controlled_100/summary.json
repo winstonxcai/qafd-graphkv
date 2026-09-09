@@ -1,6 +1,7 @@
 [
   {
     "method": "sequential",
+    "analysis_role": "preregistered control",
     "questions": 100,
     "paper_compat_accuracy": 0.42,
     "paper_delta_vs_sequential": 0.0,
@@ -11,10 +12,12 @@
     "strict_delta_ci_low": 0.0,
     "strict_delta_ci_high": 0.0,
     "explicit_answer_rate": 0.75,
-    "avg_latency_seconds": 3.2133166377060114
+    "avg_latency_seconds": 3.2133166377060114,
+    "latency_comparable": true
   },
   {
     "method": "block_rag",
+    "analysis_role": "preregistered control",
     "questions": 100,
     "paper_compat_accuracy": 0.39,
     "paper_delta_vs_sequential": -0.03,
@@ -25,10 +28,12 @@
     "strict_delta_ci_low": -0.12,
     "strict_delta_ci_high": 0.04,
     "explicit_answer_rate": 0.82,
-    "avg_latency_seconds": 3.652106382381171
+    "avg_latency_seconds": 3.652106382381171,
+    "latency_comparable": true
   },
   {
     "method": "graphkv_top1",
+    "analysis_role": "preregistered control",
     "questions": 100,
     "paper_compat_accuracy": 0.48,
     "paper_delta_vs_sequential": 0.06,
@@ -39,10 +44,28 @@
     "strict_delta_ci_low": -0.03,
     "strict_delta_ci_high": 0.13,
     "explicit_answer_rate": 0.85,
-    "avg_latency_seconds": 3.97433253550902
+    "avg_latency_seconds": 3.97433253550902,
+    "latency_comparable": true
+  },
+  {
+    "method": "graphkv_top2",
+    "analysis_role": "exploratory",
+    "questions": 100,
+    "paper_compat_accuracy": 0.42,
+    "paper_delta_vs_sequential": 0.0,
+    "paper_delta_ci_low": -0.08,
+    "paper_delta_ci_high": 0.08,
+    "strict_final_accuracy": 0.37,
+    "strict_delta_vs_sequential": 0.03,
+    "strict_delta_ci_low": -0.06,
+    "strict_delta_ci_high": 0.12,
+    "explicit_answer_rate": 0.85,
+    "avg_latency_seconds": 3.962348074720212,
+    "latency_comparable": false
   },
   {
     "method": "graphkv_top3",
+    "analysis_role": "preregistered control",
     "questions": 100,
     "paper_compat_accuracy": 0.43,
     "paper_delta_vs_sequential": 0.01,
@@ -53,10 +76,12 @@
     "strict_delta_ci_low": -0.07,
     "strict_delta_ci_high": 0.09,
     "explicit_answer_rate": 0.8,
-    "avg_latency_seconds": 3.926494021713734
+    "avg_latency_seconds": 3.926494021713734,
+    "latency_comparable": true
   },
   {
     "method": "graphkv_full",
+    "analysis_role": "preregistered control",
     "questions": 100,
     "paper_compat_accuracy": 0.42,
     "paper_delta_vs_sequential": 0.0,
@@ -67,6 +92,7 @@
     "strict_delta_ci_low": -0.1,
     "strict_delta_ci_high": 0.06,
     "explicit_answer_rate": 0.81,
-    "avg_latency_seconds": 3.961378210093826
+    "avg_latency_seconds": 3.961378210093826,
+    "latency_comparable": true
   }
 ]
