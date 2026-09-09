@@ -27,6 +27,7 @@
   "model_revision": "62eecbdfa4e12821a487e91ed2ef847a85426efe",
   "torch_dtype": "bfloat16",
   "attention_backend": "flash_attention_2",
+  "execution_hardware": "1 x NVIDIA A800 via Slurm a800-debug (job 20898)",
   "context_limit": 8192,
   "context_reserve": 256,
   "teacher_forced_steps": 8,

@@ -130,6 +130,8 @@
       "graphkv_top1",
       "graphkv_top3",
       "graphkv_full"
-    ]
+    ],
+    "execution_hardware": "1 x NVIDIA RTX 4090 per worker via Slurm rtx4090 (array job 20939)",
+    "timing_scope": "RTX 4090 calibration timing; not directly comparable with prior A800 measurements"
   }
 }

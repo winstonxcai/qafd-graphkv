@@ -1,6 +1,8 @@
 # Matched MoreHopQA topology comparison
 
-Frozen manifest: `artifacts/results/morehop_controlled_100/manifest.json` (`65b2ba28a4aebffbdec9b15aa5c01545f3f016015623119d25a2c0202e1b7268`). All methods used the same 100 questions, prompt hashes, document order, model revision, greedy decoding, and 256-token cap.
+Frozen manifest: `artifacts/results/morehop_controlled_100/manifest.json` (`5939e58d0865e6f17424135c15c7487ab552cfa7bafb80d17caca6e95bbe1c99`). All methods used the same 100 questions, prompt hashes, document order, model revision, greedy decoding, and 256-token cap.
+
+Inference ran as Slurm array job `20939` with one NVIDIA RTX 4090 per worker. Latency is valid for this matched calibration run but must not be compared directly with the earlier A800 timings.
 
 The paper-compatible and strict-final metrics are separate analyses. They are never combined into one table cell.
 
