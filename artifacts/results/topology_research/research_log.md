@@ -41,4 +41,22 @@ Raw 256-token full-dataset predictions rescored with the current project scorer:
 
 Lead review rejected the first routing draft before GPU inference: cache indexing confused layers and passages, selected source caches lacked rotary reapplication, and document tokenization lacked upstream trailing newlines/context truncation. Worker is implementing corrections and an executable GPU parity gate. Also returned the baseline audit draft for correction of static unsupported claims; numerical findings must be derived from rows.
 
-No new topology accuracy result is available yet.
+### A800 routing screen completed
+
+The executable parity gate passed on A800: the new engine matched upstream/project GraphKV Full, Top-1, and Top-3 generated text and both scorer outputs for all 100 control questions. The routing screen therefore isolates source-topology choices rather than introducing a new cache implementation.
+
+| Method | Public-compatible | Strict-final | Mean latency (s) | Mean block-read edges |
+|---|---:|---:|---:|---:|
+| released-last1 (exact GraphKV Top-1 control) | 48/100 | 39/100 | 3.688 | 10 |
+| query-BM25 k=1 | 47/100 | 39/100 | 3.683 | 10 |
+| released-last3 (exact GraphKV Top-3 control) | 43/100 | 35/100 | 3.602 | 30 |
+| query-BM25 k=3 | 43/100 | 35/100 | 3.758 | 30 |
+| reversed-rank k=1 | 45/100 | 33/100 | 3.629 | 10 |
+| random k=1, seed 42 | 42/100 | 36/100 | 3.736 | 10 |
+| Full (exact GraphKV Full control) | 42/100 | 32/100 | 3.745 | 100 |
+| query-seeded PPR k=1 | 40/100 | 30/100 | 3.645 | 10 |
+| sequential | 42/100 | 34/100 | 3.178 | — |
+
+The best public difference against sequential is +0.06 for released-last1 and +0.05 for BM25 k=1. Their 95% paired-bootstrap intervals are [0.00, 0.12] and [-0.01, 0.11], respectively; neither is a statistically significant improvement at this sample size. Released-last1 is not a new method—it is an exact GraphKV Top-1 reproduction. The only non-released candidate that merits confirmation is BM25 k=1, and it must be compared on a predeclared larger split.
+
+The 250-question confirmation manifest is frozen at `manifest_250.json` with seed `20260910:topology-confirmation-250` and hop counts 99/93/35/3/20. A matched sequential baseline and BM25 k=1/k=3, released-last1, PPR k=1, and Full runs are queued or running on A800. The first 100-question screen is not being treated as a final win.
