@@ -1,0 +1,10 @@
+/mnt/beegfs/home/Winston/old_data/miniconda3/envs/graphkv/lib/python3.10/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:21<01:05, 21.96s/it]Loading checkpoint shards:  50%|█████     | 2/4 [00:45<00:46, 23.12s/it]Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:24, 24.91s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:17<00:00, 16.81s/it]Loading checkpoint shards: 100%|██████████| 4/4 [01:17<00:00, 19.33s/it]
+ * Serving Flask app 'matched_all_methods_server'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8891
+ * Running on http://10.103.69.90:8891
+[33mPress CTRL+C to quit[0m
